@@ -1,0 +1,11 @@
+9
+Alex P A 0 1 male 9.2
+Maria A F 0 3 female 10
+Ilya B C 17 1 male 4.3
+Ilya B C 17 1 male 4.3
+Ilya B C 17 4  male 4.3
+Ilya B C 17 6 male 4.3
+Ilya B C 17 2 male 4.3
+Ilya B C 17 1 male 4.3
+Ilya B C 0 3 male 4.3
+3
