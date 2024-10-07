@@ -7,7 +7,7 @@ int main() {
     print1dMatrix(matrix);
     int* squaredMatrix = square1dMatrix(matrix);
     print1dMatrix(squaredMatrix);
-    delete1dMatrix(matrix);
+    delete[] matrix;
     int* vect = new int[SIZE];
     fillVector(vect);
     printVector(vect);
