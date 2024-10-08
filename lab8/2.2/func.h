@@ -20,8 +20,6 @@ int* multiply2dMatrixVector(int** matrix, int* vector);
 
 int* create1dMatrix();
 
-void delete1dMatrix(int* matrix);
-
 void fill1dMatrix(int* matrix);
 
 int* square1dMatrix(int* matrix);
