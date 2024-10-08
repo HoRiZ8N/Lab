@@ -66,10 +66,6 @@ int* create1dMatrix() {
     return matrix;
 }
 
-void delete1dMatrix(int* matrix) {
-    delete[] matrix;
-}
-
 void fill1dMatrix(int* matrix) {
     for (int i = 0; i < SIZE * SIZE; i++) {
         matrix[i] = rand() % MAXNUMSIZE + 1;
