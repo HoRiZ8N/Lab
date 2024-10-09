@@ -64,8 +64,6 @@ void removeNode(Node* head, Node* toRemove) {
     }
 }
 
-
-
 int main() {
     std::ifstream fin;
     fin.open("input.txt");
