@@ -56,14 +56,11 @@ int main() {
     for (int i = 0; i < SIZE; i++) {
         array[i] = generateRandomTime();
     }
-
     std::cout << "Unsorted array:\n\n";
     for (size_t i = 0; i < SIZE; i++) {
         printTime(array[i]);
     }
-    
     std::sort(array, array + SIZE, cmp);
-
     std::cout << "\nSorted array:\n\n";
     for (size_t i = 0; i < SIZE; i++) {
         printTime(array[i]);
