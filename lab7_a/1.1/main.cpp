@@ -34,7 +34,6 @@ int main() {
         n++;
     }
     std::cout << n - 1;
-    // std::cout << fact(12) << '\n' << fact(13);
 
     return 0;
 }
