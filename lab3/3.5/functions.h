@@ -1,8 +1,8 @@
 #pragma once
 #include <iostream>
 
-const int SIZE = 2000;
-const int effSize = (SIZE*(SIZE + 1)) / 2;
+const int SIZE = 10000;
+const int effSize = (SIZE / 2 * (SIZE + 1));
 
 int* createMatrix();
 
