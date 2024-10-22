@@ -10,6 +10,7 @@ union Time {
         unsigned short hours : 4;
     } fields;
 };
+
 Time generateRandomTime() {
     Time t;
     t.fields.hours = rand() % 12;
