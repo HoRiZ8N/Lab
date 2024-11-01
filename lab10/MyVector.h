@@ -3,8 +3,7 @@
 #include <iostream>
 #include <ostream>
 #include <istream>
-#include <stdexcept> // для std::out_of_range
-
+#include <stdexcept>
 template <typename T>
 class MyVector
 {
