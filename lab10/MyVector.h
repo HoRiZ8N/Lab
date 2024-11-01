@@ -35,7 +35,6 @@ private:
     size_t m_Capacity = 0;
 };
 
-// Определения методов шаблона должны быть здесь
 template <typename T>
 MyVector<T>::MyVector()
 {
