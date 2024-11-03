@@ -1,6 +1,6 @@
-#include <iostream>
+#include "MyVector.h"
 
-const int MAXVAL = 10'000'000;
+const unsigned long long MAXVAL = 10'000'000;
 
 enum InitializationType {
     KeyboardInput = 1,
@@ -9,44 +9,51 @@ enum InitializationType {
 
 int main() {
     srand(time(0));
-    long long n;
-    std::cout << "Enter the length of the sequence (n <= 10^12): ";
-    std::cin >> n;
 
-    bool* present = new bool[MAXVAL + 1]();
-
+    MyVector<bool> vect(MAXVAL + 1);
+    // std::cout << vect.Capacity() << '\n' << vect.Size();
     int choice;
     std::cout << "Choose initialization method:\n1. Keyboard input\n2. Random generation\n";
     std::cin >> choice;
 
     if (choice != KeyboardInput && choice != RandomGeneration) {
         std::cerr << "Invalid choice! Please restart the program and choose 1 or 2.\n";
-        delete[] present;
         return 1;
     }
     if (choice == KeyboardInput)
     {
-        std::cout << "Enter " << n << " natural numbers (each <= 10^7):\n";
+        std::cout << "Enter natural numbers (each <= 10^7):\n";
     }
-    for (long long i = 0; i < n; ++i) {
-        int number;
-        if (choice == KeyboardInput) {
+
+    unsigned int number;
+    switch (choice)
+    {
+    case KeyboardInput:
+        while (std::cin >> number) {
             std::cin >> number;
             if (number <= 0 || number > MAXVAL) {
                 std::cerr << "Number out of range! Please enter a number between 1 and " << MAXVAL << ".\n";
-                --i;
                 continue;
             }
-        } else {
-            number = rand() % MAXVAL + 1;
+            vect[number] = true;
         }
-
-        present[number] = true;
+        break;
+    
+    case RandomGeneration:
+        std::cout << "Enter amount of numbers to generate: ";
+        std::cin >> number;
+        for (size_t i = 0; i < number; i++)
+        {
+            unsigned long num;
+            num = rand() % MAXVAL + 1;
+            vect[num] = true;
+        }
+        break;
     }
 
     std::cout << "Missing numbers (up to " << MAXVAL << "):" << '\n';
     for (int i = 1; i <= MAXVAL; i++) {
-        if (!present[i]) {
+        if (!vect[i]) {
             std::cout << i << " ";
             if (i % 10 == 0) {
                 std::cout << '\n'; 
@@ -54,8 +61,6 @@ int main() {
         }
     }
     std::cout << '\n';
-
-    delete[] present;
 
     return 0;
 }

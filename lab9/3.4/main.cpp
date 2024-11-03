@@ -1,34 +1,41 @@
 #include <fstream>
 #include <iostream>
-#include <cstring>
 #include <string>
 
-const int STRING_SIZE = 100;
-
-struct {
-    char name[STRING_SIZE];
+struct Student {
+    std::string name;
     int age;
-    char gender[STRING_SIZE];
+    std::string gender;
     int year;
     double mark;
-} Student;
+
+    void print(std::ostream &os) const {
+        os << name << ' ' << age << ' ' << gender << ' ' << year << ' ' << mark << '\n';
+    }
+};
 
 int main() {
-    std::ifstream input;
-    std::ofstream output;
-    input.open("input.txt");
-    output.open("output.txt");
+    const char FirstChar = 'A';
+    const int Course = 1;
+
+    std::ifstream input("input.txt");
+    std::ofstream output("output.txt");
+
     if (!input.is_open() || !output.is_open()) {
         std::cerr << "Error opening file.\n";
         return 1;
     }
-    char data[STRING_SIZE];
-    if (!(getline(input, data))) {
-        std::cerr << "File is empty or invalid data.\n";
-        return 1;
-    }
-    
 
+    std::string data;
+    Student student;
+
+
+    while (input >> student.name >> student.age >> student.gender >> student.year >> student.mark) {
+        if (student.name[0] == FirstChar && student.year == Course)
+        {
+            student.print(output);  
+        }
+    }
 
     return 0;
 }
