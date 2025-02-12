@@ -1,7 +1,8 @@
 #include <iostream>
 #include <algorithm>
 
-void mergeSort(int* a, unsigned int start, unsigned int end) {
+template <typename T>
+void mergeSort(T* a, unsigned int start, unsigned int end) {
     if (end - start < 2)
         return;
     
@@ -16,7 +17,7 @@ void mergeSort(int* a, unsigned int start, unsigned int end) {
     mergeSort(a, mid, end);
 
     // Временный массив для хранения результатов слияния
-    int* temp = new int[end - start];
+    T* temp = new int[end - start];
     unsigned int b1 = start;
     unsigned int e1 = mid;
     unsigned int b2 = mid;
@@ -47,13 +48,13 @@ void mergeSort(int* a, unsigned int start, unsigned int end) {
     delete[] temp;
 }
 
-enum {
+enum FillType {
     keyboard,
     random
-} fillType;
+};
 
 int main() {
-    fillType = random;
+    FillType fillType = FillType::random;
     const int MAX_NUM = 100;
     unsigned int size;
 
@@ -62,7 +63,7 @@ int main() {
 
     int* a = new int[size];
     switch (fillType) {
-    case random:
+    case FillType::random:
         srand(time(0));
         for (int i = 0; i < size; i++) {
             a[i] = rand() % MAX_NUM;
@@ -74,7 +75,7 @@ int main() {
         std::cout << '\n';
         break;
     
-    case keyboard:
+    case FillType::keyboard:
         std::cout << "Enter array elements: ";
         for (unsigned int i = 0; i < size; ++i) {
             std::cin >> a[i];
