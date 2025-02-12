@@ -1,90 +1,143 @@
 #include <iostream>
 
-const int SIZE = 3;
-int currRight = SIZE - 1, currBottom = SIZE - 1, currLeft = 0, currTop = 0;
-unsigned int direction = 0; // 0-r    1-t      2-l    3-b
-int** matrix = new int*[SIZE];
+constexpr int randNum = 100;
 
-void initializeMatrix(int** matrix) {
-    for (int i = 0; i < SIZE; i++) {
-        matrix[i] = new int[SIZE];
+enum InitializationType
+{
+    KeyboardInput = 1,
+    RandomGeneration = 2,
+    ConstValues = 3
+};
+
+int** initializeMatrix(int size)
+{
+    int** matrix = new int*[size];
+    for (int i = 0; i < size; i++)
+    {
+        matrix[i] = new int[size];
+    }
+    return matrix;
+}
+
+void getValues(int *array, int size, int choice)
+{
+    if (choice == KeyboardInput)
+    {
+        std::cout << "Enter " << size * size << " numbers:\n";
+        for (int i = 0; i < size * size; i++)
+        {
+            std::cin >> array[i];
+        }
+    }
+    else if (choice == RandomGeneration)
+    {
+        for (int i = 0; i < size * size; i++)
+        {
+            array[i] = rand() % randNum;
+        }
+    }
+    else if(choice = ConstValues)
+    {
+        for (int i = 0; i < size * size; i++)
+        {
+            array[i] = i + 1;
+        }
+    }
+    else 
+    {
+        std::cerr << "[ERROR] Invalid choice\n";
     }
 }
 
-void deleteMatrix(int** matrix) {
-    for (int i = 0; i < SIZE; i++) {
+void deleteMatrix(int **matrix, int size)
+{
+    for (int i = 0; i < size; i++)
+    {
         delete[] matrix[i];
     }
     delete[] matrix;
 }
 
-void enterMatrix(int** matrix) {
-    int i = 0, j = 0; 
-    std::cout << "Enter matrix of " << SIZE << " size:\n";
-    for (; i < SIZE - 1; i++) {
-        std::cin >> matrix[i][j];
-    }
-    
-    while(true) {
-        if (currBottom == currTop && currLeft == currRight && SIZE % 2 == 1) {
-            std::cin >> matrix[i][j];
-            break;
-        } else if (SIZE % 2 == 0 && currLeft == (SIZE / 2) && currBottom == ((SIZE / 2) - 1) && currRight == (SIZE / 2) &&
-        currTop == ((SIZE / 2) - 1)) {
-            std::cin >> matrix[i][j];
-            break;
-        } 
-        
-        if (i == currTop && j == currLeft && direction % 4 == 3) {
-            while (i != currBottom) {
-                std::cin >> matrix[i][j];
-                i++;
-            }
-            currTop++;
-            direction++;
-        } else if (i == currBottom && j == currLeft && direction % 4 == 0) {
-            while (j != currRight) {
-                std::cin >> matrix[i][j];
-                j++;
-            }
-            currLeft++;
-            direction++;
-        } else if (i == currBottom && j == currRight && direction % 4 == 1) {
-            while (i != currTop) {
-                std::cin >> matrix[i][j];
-                i--;
-            }
-            currBottom--;
-            direction++;
-        } else if (i == currTop && j == currRight && direction % 4 == 2) {
-            while (j != currLeft) {
-                std::cin >> matrix[i][j];
-                j--;
-            }
-            currRight--;
-            direction++;
+void fillMatrix(int **matrix, int* values, int size)
+{
+    int top = 0, bottom = size - 1, left = 0, right = size - 1;
+    int index = 0;
+
+    while (left <= right && top <= bottom)
+    {
+        for (int i = top; i <= bottom; i++) // Движение вниз
+            matrix[i][left] = values[index++];
+        left++;
+
+        for (int j = left; j <= right; j++) // Движение вправо
+            matrix[bottom][j] = values[index++];
+        bottom--;
+
+        if (left <= right)
+        {
+            for (int i = bottom; i >= top; i--) // Движение вверх
+                matrix[i][right] = values[index++];
+            right--;
+        }
+
+        if (top <= bottom)
+        {
+            for (int j = right; j >= left; j--) // Движение влево
+                matrix[top][j] = values[index++];
+            top++;
         }
     }
-    std::cout << "\n";
 }
 
-void printMatrix(int** matrix) {
-    for (int i = 0; i < SIZE; i++) {
-        for (int j = 0; j < SIZE; j++) {
+void printMatrix(int** matrix, int size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
             std::cout << matrix[i][j] << ' ';
         }
         std::cout << '\n';
     }
 }
 
+void printValues(int* values, int size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            std::cout << values[i * size + j] << " ";
+        }
+        std::cout << "\n";
+    }
+    std::cout << "\n";
+}
 
+int main()
+{
 
-int main() {
-     
-    initializeMatrix(matrix);
-    enterMatrix(matrix);
-    printMatrix(matrix);
-    deleteMatrix(matrix);
+    int size;
+
+    std::cout << "Enter size of your matrix\n";
+    std::cin >> size;
+
+    int* values = new int [size * size];
+    int** matrix = initializeMatrix(size);
+    int choice;
+
+    std::cout << "Choose initialization method:\n" << 
+        InitializationType::KeyboardInput << ": Keyboard\n" <<
+        InitializationType::RandomGeneration << ": Random generation\n" <<
+        InitializationType::ConstValues << ": Constant numbers\n";
+    std::cin >> choice;
+
+    getValues(values, size, choice);
+    printValues(values, size);
+    fillMatrix(matrix, values, size);
+    printMatrix(matrix, size);
+    deleteMatrix(matrix, size);
+    delete[] values;
 
     return 0;
 }
