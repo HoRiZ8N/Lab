@@ -1,93 +1,144 @@
 #include <iostream>
 #include <algorithm>
+#include <ctime>
 
-const int SIZE = 50;
-const int k = 228;
-int* array = new int[SIZE];
-int* newArray = new int[SIZE];
-void printArray(int* arr) {
-    for (int i = 0; i < SIZE; i++) {
+enum InitializationType
+{
+    KeyboardInput = 1,
+    RandomGeneration = 2
+};
+
+void printArray(int *arr, unsigned int size)
+{
+    for (int i = 0; i < size; i++)
+    {
         std::cout << arr[i] << ' ';
     }
     std::cout << "\n\n";
 }
 
-void enterArray(int* arr) {
-    for (int i = 0; i < SIZE; i++)
+void fillArray(int *arr, unsigned int size, InitializationType fillType)
+{
+    switch (fillType)
     {
-        std::cin >> arr[i];
+    case KeyboardInput:
+    std::cout << "Enter " << size << " numbers: ";
+        for (int i = 0; i < size; i++)
+        {
+            std::cin >> arr[i];
+        }
+        break;
+    case RandomGeneration:
+        srand(time(0));
+        for (int i = 0; i < size; i++)
+        {
+            arr[i] = rand() % 100;
+        }
+        break;
+    default:
+        std::cerr << "Invalid initialization type.\n";
+        exit(1);
     }
 }
 
-void randomArray(int* arr) {
-    for (int i = 0; i < SIZE; i++) {
-        arr[i] = rand() % 100;
-    }
-    
-}
-
-void copyArray(int* arrToCopy, int* arrFromCopying) {
-    for (int i = 0; i < SIZE; i++) {
+void copyArray(int *arrToCopy, int *arrFromCopying, unsigned int size)
+{
+    for (int i = 0; i < size; i++)
+    {
         arrToCopy[i] = arrFromCopying[i];
     }
 }
 
-int* findMax(int* newarr, int* arr) {
-    int* maxValPtr = nullptr;
-    for (int i = 0; i < SIZE - 2; i++) {
-        if (newarr[i] == newarr[i + 1] && newarr[i] != newarr[i + 2]) {
+int *findMax(int *newarr, int *arr, unsigned int size)
+{
+    if (size < 2) // Проверка на минимальный размер массива
+    {
+        if (size == 1)
+        {
+            return arr; // Если один элемент, он же и максимальный
+        }
+        return nullptr; // Если пустой массив
+    }
+
+    int *maxValPtr = nullptr;
+
+    for (int i = 0; i < size - 2; i++)
+    {
+        if (newarr[i] == newarr[i + 1] && newarr[i] != newarr[i + 2])
+        {
             maxValPtr = newarr + i;
             break;
         }
     }
-    if (newarr[SIZE - 2] == newarr[SIZE - 1] && maxValPtr == nullptr) {
-        maxValPtr = &(newarr[SIZE - 2]);
+
+    if (maxValPtr == nullptr && newarr[size - 2] == newarr[size - 1]) // Проверка конца массива
+    {
+        maxValPtr = newarr + size - 2;
     }
-    if (maxValPtr == nullptr) {
-        maxValPtr = newarr;
-    }
-    
-    if (maxValPtr != nullptr) {
-        for (int i = 0; i < SIZE; i++) {
-            if (*maxValPtr == arr[i]) {
-                maxValPtr = arr + i;
-                break;
+
+    if (maxValPtr != nullptr)
+    {
+        for (int i = 0; i < size; i++)
+        {
+            if (*maxValPtr == arr[i])
+            {
+                return arr + i;
             }
         }
     }
-     
+
+    // Если подходящих значений нет, ищем максимальное в arr
+    maxValPtr = arr;
+    for (int i = 1; i < size; i++)
+    {
+        if (arr[i] > *maxValPtr)
+        {
+            maxValPtr = arr + i;
+        }
+    }
+
     return maxValPtr;
 }
 
-enum enterType{
-    keyboard = 1,
-    random = 2
-};
 
-enum enterType type = random;
+int main()
+{
+    std::cout << "Enter array size: ";
+    unsigned int size;
+    std::cin >> size;
 
-int main() {
-    srand(time(0));
-    switch (type) {
-    case 1:
-        enterArray(array);
-        break;
-    case 2:
-        randomArray(array);
-        break;
-    default:
-        return 1;
+    int choice;
+    std::cout << "Choose initialization method:\n"
+              << KeyboardInput << ": Keyboard\n"
+              << RandomGeneration << ": Random generation\n";
+    std::cin >> choice;
+    InitializationType initType = static_cast<InitializationType>(choice);
+    int k;
+    std::cout << "Enter k: ";
+    std::cin >> k;
+
+    int *array = new int[size];
+    int *newArray = new int[size];
+
+    fillArray(array, size, initType);
+    copyArray(newArray, array, size);
+
+    std::sort(newArray, newArray + size, [](int a, int b){ return a > b; });
+
+    int *maxVal = findMax(newArray, array, size);
+
+    std::cout << "Initial array:\n";
+    printArray(array, size);
+    
+    if (maxVal)
+    {
+        *maxVal = k;
     }
-    copyArray(newArray, array);
-    std::sort(newArray, newArray + SIZE, 
-    [](int a, int b){
-        return a > b;
-    });
-    int* maxVal = findMax(newArray, array);
+
+    std::cout << "Changed array:\n";
+    printArray(array, size);
+
     delete[] newArray;
-    printArray(array);
-    *maxVal = k;
-    printArray(array);
     delete[] array;
 
     return 0;
