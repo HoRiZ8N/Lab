@@ -28,13 +28,13 @@ char **getWordsFromText(char *text, char **wordArray, int &wordCount)
     
     while (text[l] != '\0')
     {
-        while (isSeparator(text[l]) && text[l] != '\0') // Проверяем конец строки
+        while (isSeparator(text[l]) && text[l] != '\0') 
         {
             l++;
         }
         
         r = l;
-        while (!isSeparator(text[r]) && text[r] != '\0') // Проверяем конец строки
+        while (!isSeparator(text[r]) && text[r] != '\0') 
         {
             r++;
         }
@@ -46,7 +46,7 @@ char **getWordsFromText(char *text, char **wordArray, int &wordCount)
             wordArray[numOfWords][wordLength] = '\0';
             numOfWords++;
 
-            if (numOfWords >= MAX_WORDS_IN_ARRAY) // Защита от переполнения массива
+            if (numOfWords >= MAX_WORDS_IN_ARRAY) 
                 break;
         }
         l = r;
@@ -87,10 +87,10 @@ void freeWordArray(char **wordArray)
 char* findAnagramWords(char **words, int wordCount)
 {
     char *result = new char[MAX_TEXT_SIZE];
-    result[0] = '\0'; // Очищаем строку
+    result[0] = '\0';
 
     char** sortedWords = createWordArray();
-    bool *used = new bool[wordCount](); // Динамический массив флагов
+    bool *used = new bool[wordCount](); 
 
     for (int i = 0; i < wordCount; i++)
     {
@@ -134,9 +134,9 @@ char* findAnagramWords(char **words, int wordCount)
     }
 
     freeWordArray(sortedWords);
-    delete[] used; // Освобождаем динамический массив флагов
+    delete[] used; 
 
-    return result; // Теперь корректно возвращаем динамически выделенную память
+    return result;
 }
 
 int main()
