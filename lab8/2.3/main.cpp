@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cstring>
 #include <fstream>
+#include <cctype>
 
 const int STRING_SIZE = 100;
 
@@ -89,12 +90,14 @@ int main() {
     Node* newHead = new Node;
     Node* curr = head;
     while (curr != nullptr) {
-        if (curr->fullName[0] == letter) {
+        if (tolower(curr->fullName[0]) == tolower(letter)) {
             addNode(newHead, curr->fullName, curr->birthDate, curr->year, curr->mark);
             removeNode(head, curr);
         }
         curr = curr->next;
     }
+
+    std::cout << "List of people, whose names start whis letter " << letter << ":\n";
     printNames(newHead);
 
     freeList(head);
