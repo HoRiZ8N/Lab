@@ -2,20 +2,37 @@
 
 int main() {
     srand(time(0));
-    int* matrix = create1dMatrix();
-    fill1dMatrix(matrix);  
-    print1dMatrix(matrix);
-    int* squaredMatrix = square1dMatrix(matrix);
-    print1dMatrix(squaredMatrix);
-    delete[] matrix;
-    int* vect = new int[SIZE];
-    fillVector(vect);
-    printVector(vect);
-    int* ans = multiply1dMatrixVector(squaredMatrix, vect);
-    delete[] squaredMatrix;
+
+    int size;
+    std::cout << "Enter matrix and vector size: ";
+    std::cin >> size;
+
+    int* matrix = create1dMatrix(size);
+    int* vect = new int[size];
+
+    fill1dMatrix(matrix, size);
+    fillVector(vect, size);
+
+    std::cout << "\nInitial matrix:\n"; 
+    print1dMatrix(matrix, size);
+
+    square1dMatrix(matrix, size);
+
+    std::cout << "Squared matrix:\n";
+
+    print1dMatrix(matrix, size);
+    
+    std::cout << "Vector:\n";
+    printVector(vect, size);
+    
+    int* result = multiply1dMatrixVector(matrix, vect, size);
+
+    std::cout << "Result:\n";
+    printVector(result, size);
+
     delete[] vect;
-    printVector(ans);
-    delete[] ans;
+    delete[] matrix;
+    delete[] result;
 
     return 0;
 }

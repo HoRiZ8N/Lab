@@ -4,32 +4,32 @@
 const int SIZE = 2;
 const int MAXNUMSIZE = 10;
 
-int** create2dMatrix();
+int** create2dMatrix(int size);
 
-void delete2dMatrix(int** matrix);
+void delete2dMatrix(int** matrix, int size);
 
-void fill2dMatrix(int** matrix);
+void fill2dMatrix(int** matrix, int size);
 
-int** square2dMatrix(int** matrix);
+void square2dMatrix(int **matrix, int size);
 
-void print2dMatrix(int** matrix);
+void print2dMatrix(int** matrix, int size);
 
-int* multiply2dMatrixVector(int** matrix, int* vector);
+int* multiply2dMatrixVector(int** matrix, int* vector, int size);
 
 
 
-int* create1dMatrix();
+int* create1dMatrix(int size);
 
-void fill1dMatrix(int* matrix);
+void fill1dMatrix(int* matrix, int size);
 
-int* square1dMatrix(int* matrix);
+void square1dMatrix(int* matrix, int size);
 
-void print1dMatrix(int* matrix);
+void print1dMatrix(int* matrix, int size);
 
-int getIndex(int i, int j);
+int getIndex(int i, int j, int size);
 
-void printVector(int* vector);
+void printVector(int* vector, int size);
 
-int* multiply1dMatrixVector(int* matrix, int* vector);
+int* multiply1dMatrixVector(int *matrix, int *vector, int size);
 
-void fillVector(int* vector);
+void fillVector(int* vector, int size);
