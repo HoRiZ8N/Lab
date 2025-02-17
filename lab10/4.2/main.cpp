@@ -7,7 +7,7 @@ LinkedList<char> FormListWithTwoOccurrences(LinkedList<char>& L1) {
     int counts[charSize] = {0};
 
     for (size_t i = 0; i < L1.Size(); ++i) {
-        char currentChar = L1.FindElement(i);
+        char currentChar = L1.Search(i);
         counts[static_cast<unsigned char>(currentChar)]++;
     }
 

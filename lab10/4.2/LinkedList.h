@@ -16,13 +16,13 @@ public:
     LinkedList &operator=(LinkedList &&other) noexcept; // move assignment operator
     void PushBack(T data); // add an element to the end
     void Push(T data, size_t index);
-    T FindElement(size_t index); // find an element by index
+    T Search(size_t index); // Search an element by index
     void Pop(size_t index); // delete an element by index
     void PopBack(); // delete last
     size_t Size(); // get the size of the list
 
-    friend std::ostream &operator<<(std::ostream &os, const LinkedList &vector) {
-        typename LinkedList<T>::Node* current = vector.head;
+    friend std::ostream &operator<<(std::ostream &os, const LinkedList &list) {
+        typename LinkedList<T>::Node* current = list.head;
         os << "[";
         while (current != nullptr) {
             os << current->m_data;
@@ -34,11 +34,11 @@ public:
         os << "]";
         return os;
     }
-    friend std::istream &operator>>(std::istream &is, LinkedList<T> &vector) {
+    friend std::istream &operator>>(std::istream &is, LinkedList<T> &list) {
         T value;
-        vector.Clear(); // Очистка списка перед вводом
+        list.Clear();
         while (is >> value) {
-            vector.PushBack(value); // Добавляем введенные значения в список
+            list.PushBack(value);
         }
         return is;
     }
@@ -176,7 +176,7 @@ void LinkedList<T>::Push(T data, size_t index)
 }
 
 template <typename T>
-T LinkedList<T>::FindElement(size_t index)
+T LinkedList<T>::Search(size_t index)
 {
     if (index >= this->Size())
     {
