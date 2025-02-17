@@ -21,7 +21,7 @@ int** initializeMatrix(int size)
 
 void getValues(int *array, int size, int choice)
 {
-    if (choice == KeyboardInput)
+    if (choice == InitializationType::KeyboardInput)
     {
         std::cout << "Enter " << size * size << " numbers:\n";
         for (int i = 0; i < size * size; i++)
@@ -29,14 +29,14 @@ void getValues(int *array, int size, int choice)
             std::cin >> array[i];
         }
     }
-    else if (choice == RandomGeneration)
+    else if (choice == InitializationType::RandomGeneration)
     {
         for (int i = 0; i < size * size; i++)
         {
             array[i] = rand() % randNum;
         }
     }
-    else if(choice = ConstValues)
+    else if(choice = InitializationType::ConstValues)
     {
         for (int i = 0; i < size * size; i++)
         {
@@ -99,6 +99,7 @@ void printMatrix(int** matrix, int size)
         }
         std::cout << '\n';
     }
+    std::cout << "\n";
 }
 
 void printValues(int* values, int size)
@@ -133,8 +134,11 @@ int main()
     std::cin >> choice;
 
     getValues(values, size, choice);
+    std::cout << "Values:\n";
     printValues(values, size);
     fillMatrix(matrix, values, size);
+    std::cout << "Matrix:\n";
+
     printMatrix(matrix, size);
     deleteMatrix(matrix, size);
     delete[] values;

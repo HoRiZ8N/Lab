@@ -1,7 +1,7 @@
 #include <iostream>
 #include <algorithm>
-#include <cstdlib> // Для rand()
-#include <ctime>   // Для srand()
+#include <cstdlib> 
+#include <ctime>   
 
 enum InitializationType
 {

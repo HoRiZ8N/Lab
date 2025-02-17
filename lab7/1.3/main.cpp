@@ -22,7 +22,7 @@ void fillArray(int *arr, unsigned int size, InitializationType fillType)
     switch (fillType)
     {
     case KeyboardInput:
-    std::cout << "Enter " << size << " numbers: ";
+        std::cout << "Enter " << size << " numbers: ";
         for (int i = 0; i < size; i++)
         {
             std::cin >> arr[i];
@@ -49,15 +49,12 @@ void copyArray(int *arrToCopy, int *arrFromCopying, unsigned int size)
     }
 }
 
-int *findMax(int *newarr, int *arr, unsigned int size)
+int &findMax(int *newarr, int *arr, unsigned int size)
 {
-    if (size < 2) // Проверка на минимальный размер массива
+
+    if (size == 1)
     {
-        if (size == 1)
-        {
-            return arr; // Если один элемент, он же и максимальный
-        }
-        return nullptr; // Если пустой массив
+        return *arr;
     }
 
     int *maxValPtr = nullptr;
@@ -82,7 +79,7 @@ int *findMax(int *newarr, int *arr, unsigned int size)
         {
             if (*maxValPtr == arr[i])
             {
-                return arr + i;
+                return *(arr + i);
             }
         }
     }
@@ -97,9 +94,8 @@ int *findMax(int *newarr, int *arr, unsigned int size)
         }
     }
 
-    return maxValPtr;
+    return *maxValPtr;
 }
-
 
 int main()
 {
@@ -123,16 +119,17 @@ int main()
     fillArray(array, size, initType);
     copyArray(newArray, array, size);
 
-    std::sort(newArray, newArray + size, [](int a, int b){ return a > b; });
+    std::sort(newArray, newArray + size, [](int a, int b)
+              { return a > b; });
 
-    int *maxVal = findMax(newArray, array, size);
+    int &maxVal = findMax(newArray, array, size);
 
     std::cout << "Initial array:\n";
     printArray(array, size);
-    
+
     if (maxVal)
     {
-        *maxVal = k;
+        maxVal = k;
     }
 
     std::cout << "Changed array:\n";
