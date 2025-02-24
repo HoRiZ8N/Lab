@@ -29,14 +29,16 @@ void printNodeVal(Node* head) {
 }
 
 int main() {
-    int n;
+    int size;
     int numOfSymbols[256] = {};
     Node* head = new Node;
     Node* curr = head;
+
     std::cout << "Enter array size: ";
-    std::cin >> n; 
-    std::cout << "\nEnter " << n << " symbols: ";
-    for (int i = 0; i < n; i++) {
+    std::cin >> size; 
+    std::cout << "\nEnter " << size << " symbols: ";
+
+    for (int i = 0; i < size; i++) {
         Node* newNode = new Node;
         char s;
         std::cin >> s;
@@ -45,17 +47,17 @@ int main() {
         numOfSymbols[s]++;
         curr = curr->next;
     }
+
+    std::cout << "Values:\n";
     printNodeVal(head);
+
     Node* newHead = new Node;
     Node* newCurr = newHead;
     curr = head;
-    // for (int i = 0; i < 256; i++) {
-    //     std::cout << numOfSymbols[i] << ' ';
-    // }
     
-    for (int i = 0; i < n; i++) {
-        if (numOfSymbols[curr->next->symb] == 2) {
-            numOfSymbols[curr->next->symb] = 0;
+    for (int i = 0; i < size; i++) {
+        if (numOfSymbols[int(curr->next->symb)] == 2) {
+            numOfSymbols[int(curr->next->symb)] = 0;
             Node* newNode = new Node;
             newCurr->next = newNode;
             newNode->symb = curr->next->symb;
@@ -64,7 +66,9 @@ int main() {
         curr = curr->next;
     }
     
+    std::cout << "\nSymbols that appear exactly twice:\n";
     printNodeVal(newHead);
+
     freeList(head);
     freeList(newHead);
 

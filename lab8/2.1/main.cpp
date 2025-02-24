@@ -1,9 +1,10 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <limits>
 
-const int MAX_VAL = 10'000'000;
-const long long MAX_SEQUENCE_SIZE = 1'000'000'000'000;
+const int       MAX_VAL           = 10'000'000;        // максимальное значение
+const long long MAX_SEQUENCE_SIZE = 1'000'000'000'000; // максимальная длина последовательности
 
 enum InitializationType
 {
@@ -11,7 +12,7 @@ enum InitializationType
     RandomGeneration = 2
 };
 
-void fillArray(bool *arr, unsigned int size, InitializationType fillType)
+void fillArray(unsigned int *arr, unsigned int size, InitializationType fillType)
 {
     switch (fillType)
     {
@@ -27,7 +28,7 @@ void fillArray(bool *arr, unsigned int size, InitializationType fillType)
                 --i;
                 continue;
             }
-            arr[number] = true;
+            arr[i] = number;
         }
         break;
 
@@ -35,8 +36,8 @@ void fillArray(bool *arr, unsigned int size, InitializationType fillType)
         srand(time(0));
         for (unsigned int i = 0; i < size; ++i)
         {
-            unsigned int randomVal = rand() % (MAX_VAL + 1);
-            arr[randomVal] = true;
+            unsigned int randomVal = rand() % MAX_VAL + 1; 
+            arr[i] = randomVal;
         }
         break;
 
@@ -46,16 +47,33 @@ void fillArray(bool *arr, unsigned int size, InitializationType fillType)
     }
 }
 
-void printArray(bool* array)
+void printArray(unsigned int *array, unsigned int size)
 {
-    for (int i = 0; i < MAX_VAL; i++)
+    for (unsigned int i = 0; i < size; i++)
     {
-        if (array[i])
-        {
-            std::cout << i << " ";
-        }
+        std::cout << array[i] << " ";
     }
     std::cout << "\n";
+}
+
+unsigned int* getMissingValArr(unsigned int *source, long long n)
+{
+    bool *boolArr = new bool[MAX_VAL + 1]();
+    unsigned int *dest = new unsigned int[MAX_VAL - n]();
+    for (long long i = 0; i < n; i++)
+    {
+        boolArr[source[i]] = true;
+    }
+    int k = 0;
+    for (int i = 1; i <= MAX_VAL; i++)
+    {
+        if (!boolArr[i])
+        {
+           dest[k++] = i;  
+        }
+    }
+    delete[] boolArr;
+    return dest;
 }
 
 int main()
@@ -64,12 +82,16 @@ int main()
     std::cout << "Enter the length of the sequence (n <= 10^12): ";
     std::cin >> n;
 
-    if (n > MAX_SEQUENCE_SIZE) {
+    if (n > MAX_SEQUENCE_SIZE)
+    {
         std::cerr << "The value of n should be less than or equal to " << MAX_SEQUENCE_SIZE << ".\n";
         return 1;
     }
-
-    bool *arr = new bool[MAX_VAL + 1]();
+    else if (n <= 0)
+    {
+        std::cerr << "The value of n can't be less than or equal to 0";
+        return 1;
+    }
 
     std::cout << "Choose initialization method:\n"
               << InitializationType::KeyboardInput << ": Keyboard\n"
@@ -79,25 +101,19 @@ int main()
 
     InitializationType initType = static_cast<InitializationType>(choice);
 
-    fillArray(arr, n, initType);
+    unsigned int* sourceArr = new unsigned int[n];
+    fillArray(sourceArr, n, initType);
 
     std::cout << "Initial array:\n";
-    printArray(arr);
-    std::cout << "Missing numbers (up to " << n << "):" << '\n';
-    for (int i = 1; i <= n; ++i) 
-    {
-        if (!arr[i])
-        {
-            std::cout << i << " ";
-            if (i % 10 == 0)
-            {
-                std::cout << '\n';
-            }
-        }
-    }
-    std::cout << '\n';
+    printArray(sourceArr, n);
 
-    delete[] arr;
+    unsigned int* destArr = getMissingValArr(sourceArr, n);
+
+    std::cout << "Missing numbers:" << '\n';
+    printArray(destArr, MAX_VAL - n);
+
+    delete[] sourceArr;
+    delete[] destArr;
 
     return 0;
 }
