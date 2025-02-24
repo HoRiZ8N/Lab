@@ -2,77 +2,100 @@
 #include <algorithm>
 #include <cstring>
 #include <fstream>
-#include <cctype>
 
 const int STRING_SIZE = 100;
 
-struct Node {
-    char birthDate[STRING_SIZE];
+struct Node
+{
     char fullName[STRING_SIZE];
+    char birthDate[STRING_SIZE];
     int year;
     float mark;
-    Node* next;
-    Node(const char* FullName, const char* BirthDate, int Year, float Mark) {
+    Node *next;
+    Node(const char *FullName, const char *BirthDate, int Year, float Mark)
+    {
         strcpy(birthDate, BirthDate);
         strcpy(fullName, FullName);
         year = Year;
         mark = Mark;
         next = nullptr;
     }
-    Node() {
+    Node()
+    {
         next = nullptr;
     }
 };
 
-void addNode(Node* head, const char* FullName, const char* BirtDate, int Year, float Mark) {
-    Node* curr = head;
-    Node* newNode = new Node(FullName, BirtDate, Year, Mark);
-    if (head->next == nullptr) {
-        head->next = newNode; 
+void addNode(Node *head, const char *FullName, const char *BirtDate, int Year, float Mark)
+{
+    Node *curr = head;
+    Node *newNode = new Node(FullName, BirtDate, Year, Mark);
+    if (head->next == nullptr)
+    {
+        head->next = newNode;
         return;
     }
-    while (curr->next != nullptr && strcmp(curr->next->fullName, newNode->fullName) < 0) {
+    while (curr->next != nullptr && strcmp(curr->next->fullName, newNode->fullName) < 0)
+    {
         curr = curr->next;
-    }  
+    }
     newNode->next = curr->next;
     curr->next = newNode;
 }
 
-void printNames(Node* head) {
-    Node* curr = head;
-    while (curr->next != nullptr) {
+void printNames(Node *head)
+{
+    Node *curr = head;
+    while (curr->next != nullptr)
+    {
         curr = curr->next;
         std::cout << curr->fullName << '\n';
-    }  
+    }
     std::cout << '\n';
 }
 
-void freeList(Node* head) {
-    Node* current = head;
-    Node* nextNode;
+void deleteList(Node *head)
+{
+    Node *current = head;
+    Node *nextNode;
 
-    while (current != nullptr) {
+    while (current != nullptr)
+    {
         nextNode = current->next;
         delete current;
-        current = nextNode; 
+        current = nextNode;
     }
 }
 
-void removeNode(Node* head, Node* toRemove) {
-    Node* curr = head;
-    while (curr->next != toRemove) {
+void removeNode(Node *head, Node *toRemove)
+{
+    Node *curr = head;
+    while (curr != nullptr && curr->next != toRemove)
+    {
+        curr = curr->next;
+    }
+    if (curr != nullptr && curr->next == toRemove)
+    {
+        Node *temp = curr->next;
         curr->next = curr->next->next;
+        delete temp;
     }
 }
 
-int main() {
+
+int main()
+{
     std::ifstream fin;
     fin.open("input.txt");
-    Node* head = new Node;
+
+    Node *head = new Node;
     int size;
     fin >> size;
-    for (int i = 0; i < size; i++) {
-        char birthdate[STRING_SIZE], fullname[STRING_SIZE] = "", name[STRING_SIZE], surname[STRING_SIZE], secondsurname[STRING_SIZE];
+
+    for (int i = 0; i < size; i++)
+    {
+        char birthdate[STRING_SIZE], fullname[STRING_SIZE] = "", name[STRING_SIZE] = "",
+            surname[STRING_SIZE] = "", secondsurname[STRING_SIZE] = "";
         int year;
         float mark;
         fin >> surname >> name >> secondsurname >> birthdate >> year >> mark;
@@ -84,24 +107,30 @@ int main() {
         strcat(fullname, " ");
         addNode(head, fullname, birthdate, year, mark);
     }
+
+    std::cout << "Initial array:\n"; 
     printNames(head);
+
     char letter;
     fin >> letter;
-    Node* newHead = new Node;
-    Node* curr = head;
-    while (curr != nullptr) {
-        if (tolower(curr->fullName[0]) == tolower(letter)) {
+    Node *newHead = new Node;   
+    Node *curr = head;
+
+    while (curr != nullptr)
+    {
+        if (tolower(curr->fullName[0]) == tolower(letter))
+        {
             addNode(newHead, curr->fullName, curr->birthDate, curr->year, curr->mark);
             removeNode(head, curr);
         }
         curr = curr->next;
     }
-
-    std::cout << "List of people, whose names start whis letter " << letter << ":\n";
+    std::cout << "New array:\n";
     printNames(newHead);
 
-    freeList(head);
-    freeList(newHead);
+    deleteList(head);
+    deleteList(newHead);
     fin.close();
+
     return 0;
 }
