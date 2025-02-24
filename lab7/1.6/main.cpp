@@ -1,16 +1,21 @@
 #include <iostream>
 #include <algorithm>
-#include <cstdlib> 
-#include <ctime>   
+#include <cstdlib>
+#include <ctime>
+#include <cstring>
 
-enum InitializationType
+enum DataTypes
 {
-    KeyboardInput = 1,
-    RandomGeneration = 2
+    int_type = 1,
+    double_type,
+    string_type,
+    char_type
 };
 
+
+
 template <typename T>
-void mergeSort(T* a, unsigned int start, unsigned int end)
+void mergeSort(T *a, unsigned int start, unsigned int end)
 {
     if (end - start < 2)
         return;
@@ -27,7 +32,7 @@ void mergeSort(T* a, unsigned int start, unsigned int end)
     mergeSort(a, mid, end);
 
     // Временный массив для хранения результатов слияния
-    T* temp = new T[end - start];
+    T *temp = new T[end - start];
     unsigned int b1 = start;
     unsigned int e1 = mid;
     unsigned int b2 = mid;
@@ -65,68 +70,172 @@ void mergeSort(T* a, unsigned int start, unsigned int end)
     delete[] temp;
 }
 
-template <typename T>
-void fillArray(T* arr, unsigned int size, InitializationType fillType)
+void mergeSort(char* a[], unsigned int start, unsigned int end)
 {
-    switch (fillType)
+    if (end - start < 2)
+        return;
+
+    if (end - start == 2)
     {
-    case InitializationType::KeyboardInput:
-        std::cout << "Enter " << size << " values: ";
-        for (unsigned int i = 0; i < size; i++)
+        if (strcmp(a[start], a[start + 1]) > 0)
         {
-            std::cin >> arr[i];
+            std::swap(a[start], a[start + 1]);
         }
-        break;
-    case InitializationType::RandomGeneration:
-        srand(time(0));
-        for (unsigned int i = 0; i < size; i++)
-        {
-            arr[i] = rand() % 100;
-        }
-        break;
-    default:
-        std::cerr << "Invalid initialization type.\n";
-        exit(1);
+        return;
     }
+
+    unsigned int mid = start + (end - start) / 2;
+    mergeSort(a, start, mid);
+    mergeSort(a, mid, end);
+
+    // Временный массив для хранения результатов слияния
+    char** temp = new char*[end - start];
+    unsigned int b1 = start;
+    unsigned int e1 = mid;
+    unsigned int b2 = mid;
+    unsigned int idx = 0;
+
+    // Слияние двух отсортированных частей
+    while (b1 < e1 && b2 < end)
+    {
+        if (strcmp(a[b1], a[b2]) <= 0)
+        {
+            temp[idx++] = a[b1++];
+        }
+        else
+        {
+            temp[idx++] = a[b2++];
+        }
+    }
+
+    // Копируем оставшиеся элементы
+    while (b1 < e1)
+    {
+        temp[idx++] = a[b1++];
+    }
+    while (b2 < end)
+    {
+        temp[idx++] = a[b2++];
+    }
+
+    // Копируем обратно в массив
+    for (unsigned int i = 0; i < end - start; ++i)
+    {
+        a[start + i] = temp[i];
+    }
+
+    delete[] temp;
+}
+
+template <typename T>
+void fillArray(T arr[], int size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        std::cin >> arr[i];
+    }
+}
+
+void fillArray(char* arr[], int size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        std::cin >> arr[i];
+    }
+}
+
+template <typename T>
+void printArray(T arr[], int size)
+{
+    for (int i = 0; i < size; i++)
+        std::cout << arr[i] << " ";
+    std::cout << std::endl;
+}
+
+void printArray(char *arr[], int size)
+{
+    for (int i = 0; i < size; i++)
+        std::cout << arr[i] << " ";
+    std::cout << std::endl;
 }
 
 int main()
 {
-    InitializationType fillType;
     unsigned int size;
 
     std::cout << "Enter array size: ";
     std::cin >> size;
 
-    std::cout << "Choose initialization method:\n"
-              << InitializationType::KeyboardInput << ": Keyboard\n"
-              << InitializationType::RandomGeneration << ": Random generation\n";
+    std::cout << "Choose data type:\n"
+              << DataTypes::int_type << ": integer\n"
+              << DataTypes::double_type << ": double\n"
+              << DataTypes::char_type << ": char\n"
+              << DataTypes::string_type << ": string\n";
     int choice;
     std::cin >> choice;
-    
-    InitializationType initType = static_cast<InitializationType>(choice);
 
-    int* arr = new int[size];
+    DataTypes dataType = static_cast<DataTypes>(choice);
 
-    fillArray(arr, size, initType);
-
-    std::cout << "Array before sorting: ";
-    for (unsigned int i = 0; i < size; ++i)
+    if (dataType == DataTypes::int_type)
     {
-        std::cout << arr[i] << ' ';
+        int *arr = new int[size];
+        std::cout << "Enter " << size << " values:\n";
+        fillArray(arr, size);
+        std::cout << "Array before sorting:\n";
+        printArray(arr, size);
+        mergeSort(arr, 0, size);
+        std::cout << "Array after sorting:\n";
+        printArray(arr, size);
+        delete[] arr;
     }
-    std::cout << '\n';
 
-    mergeSort(arr, 0, size);
-
-    std::cout << "Array after sorting: ";
-    for (unsigned int i = 0; i < size; ++i)
+    else if (dataType == DataTypes::double_type)
     {
-        std::cout << arr[i] << ' ';
+        double *arr = new double[size];
+        std::cout << "Enter " << size << " values:\n";
+        fillArray(arr, size);
+        std::cout << "Array before sorting:\n";
+        printArray(arr, size);
+        mergeSort(arr, 0, size);
+        std::cout << "Array after sorting:\n";
+        printArray(arr, size);
+        delete[] arr;
     }
-    std::cout << '\n';
 
-    delete[] arr;
+    else if (dataType == DataTypes::char_type)
+    {
+        char *arr = new char[size];
+        std::cout << "Enter " << size << " values:\n";
+        fillArray(arr, size);
+        std::cout << "Array before sorting:\n";
+        printArray(arr, size);
+        mergeSort(arr, 0, size);
+        std::cout << "Array after sorting:\n";
+        printArray(arr, size);
+        delete[] arr;
+    }
+
+    else if (dataType == DataTypes::string_type)
+    {
+        const unsigned int MAX_STRING_SIZE = 1000;
+        char **arr = new char *[size];
+        for (int i = 0; i < size; i++)
+        {
+            arr[i] = new char[MAX_STRING_SIZE];
+        }
+        std::cout << "Enter " << size << " values:\n";
+        fillArray(arr, size);
+        std::cout << "Array before sorting:\n";
+        printArray(arr, size);
+        mergeSort(arr, 0, size);
+        std::cout << "Array after sorting:\n";
+        printArray(arr, size);
+        for (int i = 0; i < size; i++)
+        {
+            delete[] arr[i];
+        }
+        delete[] arr;
+    }
 
     return 0;
 }
