@@ -14,7 +14,7 @@ private:
 
     Node *head;
     Node *tail;
-    int size;
+    int size = 0;
 
 public:
     DoublyLinkedList() : head(nullptr), tail(nullptr), size(0) {}
@@ -42,15 +42,15 @@ public:
 
         double result = 0.0;
         Node *current = head;
-        Node *nextNode = head->next;
         Node *tailNode = tail;
 
-        for (int i = 0; i < size - 1; i++)
+        int i = 0;
+        while (current && tailNode && current != tailNode)
         {
-            result += current->value + nextNode->value + (size - i) * tailNode->value;
+            result += current->value + (size - i) * tailNode->value;
             current = current->next;
-            nextNode = nextNode->next;
             tailNode = tailNode->prev;
+            i++;
         }
 
         return result;
