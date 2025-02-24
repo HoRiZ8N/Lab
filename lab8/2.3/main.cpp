@@ -4,40 +4,46 @@
 
 const int STRING_SIZE = 100;
 
-struct Node
+struct Student
 {
     char fullName[STRING_SIZE];
     char birthDate[STRING_SIZE];
     int year;
     float mark;
-    Node *next;
-    Node(const char *FullName, const char *BirthDate, int Year, float Mark)
+    Student(const char *FullName, const char *BirthDate, int Year, float Mark)
     {
-        strcpy(birthDate, BirthDate);
         strcpy(fullName, FullName);
+        strcpy(birthDate, BirthDate);
         year = Year;
         mark = Mark;
-        next = nullptr;
     }
-    Node()
-    {
-        next = nullptr;
-    }
+    Student() {}
 };
 
-void addNode(Node *head, const char *FullName, const char *BirtDate, int Year, float Mark)
+struct Node
+{
+    Student data;
+    Node *next;
+    Node(const Student &student) : data(student), next(nullptr) {}
+    Node() : next(nullptr) {}
+};
+
+void addNode(Node *head, const Student &student)
 {
     Node *curr = head;
-    Node *newNode = new Node(FullName, BirtDate, Year, Mark);
+    Node *newNode = new Node(student);
+
     if (head->next == nullptr)
     {
         head->next = newNode;
         return;
     }
-    while (curr->next != nullptr && strcmp(curr->next->fullName, newNode->fullName) < 0)
+    
+    while (curr->next != nullptr && strcmp(curr->next->data.fullName, newNode->data.fullName) < 0)
     {
         curr = curr->next;
     }
+    
     newNode->next = curr->next;
     curr->next = newNode;
 }
@@ -48,7 +54,7 @@ void printNames(Node *head)
     while (curr->next != nullptr)
     {
         curr = curr->next;
-        std::cout << curr->fullName << '\n';
+        std::cout << curr->data.fullName << '\n';
     }
     std::cout << '\n';
 }
@@ -73,6 +79,7 @@ void removeNode(Node *head, Node *toRemove)
     {
         curr = curr->next;
     }
+    
     if (curr != nullptr && curr->next == toRemove)
     {
         Node *temp = curr->next;
@@ -81,11 +88,9 @@ void removeNode(Node *head, Node *toRemove)
     }
 }
 
-
 int main()
 {
-    std::ifstream fin;
-    fin.open("input.txt");
+    std::ifstream fin("input.txt");
 
     Node *head = new Node;
     int size;
@@ -93,38 +98,43 @@ int main()
 
     for (int i = 0; i < size; i++)
     {
-        char birthdate[STRING_SIZE], fullname[STRING_SIZE] = "", name[STRING_SIZE] = "",
-            surname[STRING_SIZE] = "", secondsurname[STRING_SIZE] = "";
+        char birthDate[STRING_SIZE], fullName[STRING_SIZE] = "", name[STRING_SIZE] = "", 
+            surname[STRING_SIZE] = "", secondSurname[STRING_SIZE] = "";
         int year;
         float mark;
-        fin >> surname >> name >> secondsurname >> birthdate >> year >> mark;
-        strcpy(fullname, surname);
-        strcat(fullname, " ");
-        strcat(fullname, name);
-        strcat(fullname, " ");
-        strcat(fullname, secondsurname);
-        strcat(fullname, " ");
-        addNode(head, fullname, birthdate, year, mark);
+        fin >> surname >> name >> secondSurname >> birthDate >> year >> mark;
+        
+        strcat(fullName, surname);
+        strcat(fullName, " ");
+        strcat(fullName, name);
+        strcat(fullName, " ");
+        strcat(fullName, secondSurname);
+        
+        Student student(fullName, birthDate, year, mark);
+        addNode(head, student);
     }
 
-    std::cout << "Initial array:\n"; 
+    std::cout << "Initial list:\n"; 
     printNames(head);
 
     char letter;
     fin >> letter;
-    Node *newHead = new Node;   
-    Node *curr = head;
+    Node *newHead = new Node;
+    Node *curr = head->next; 
 
     while (curr != nullptr)
     {
-        if (tolower(curr->fullName[0]) == tolower(letter))
+        if (tolower(curr->data.fullName[0]) == tolower(letter))
         {
-            addNode(newHead, curr->fullName, curr->birthDate, curr->year, curr->mark);
+            addNode(newHead, curr->data);
             removeNode(head, curr);
         }
         curr = curr->next;
     }
-    std::cout << "New array:\n";
+
+    std::cout << "Updated list:\n";
+    printNames(head);
+    std::cout << "New list:\n";
     printNames(newHead);
 
     deleteList(head);

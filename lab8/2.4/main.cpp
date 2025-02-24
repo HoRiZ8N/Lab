@@ -120,6 +120,5 @@ int main()
 
     deleteList(head);
     deleteList(newHead);
-
     return 0;
 }

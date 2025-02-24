@@ -41,16 +41,16 @@ public:
             return 0.0;
 
         double result = 0.0;
-        Node *first = head;
-        Node *second = head->next;
-        Node *last = tail;
+        Node *current = head;
+        Node *nextNode = head->next;
+        Node *tailNode = tail;
 
         for (int i = 0; i < size - 1; i++)
         {
-            result += first->value + second->value + (size - i) * last->value;
-            first = first->next;
-            second = second->next;
-            last = last->prev;
+            result += current->value + nextNode->value + (size - i) * tailNode->value;
+            current = current->next;
+            nextNode = nextNode->next;
+            tailNode = tailNode->prev;
         }
 
         return result;
