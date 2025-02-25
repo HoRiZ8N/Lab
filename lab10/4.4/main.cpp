@@ -3,7 +3,7 @@
 
 int main()
 {
-    RationalFraction num1(14, 3), num2(7, 3), num3;
+    RationalFraction num1(-14, -3), num2(7, 3), num3;
     std::cout << "Num1: ";
     num1.print();
     std::cout << "\nNum2: ";
