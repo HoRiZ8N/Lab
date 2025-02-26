@@ -74,7 +74,7 @@ int main()
     switch (initType)
     {
     case InitializationType::RandomGeneration:
-        srand(static_cast<unsigned int>(time(0)));
+        srand(time(0));
         for (int i = 0; i < size; i++)
         {
             char s = rand() % 94 + 33; // Limiting to printable characters
@@ -95,7 +95,7 @@ int main()
         break;
 
     default:
-        std::cerr << "Invalid initialization method.\n";
+        std::cerr << "[ERROR] Invalid initialization method.\n";
         return 1;
     }
 
