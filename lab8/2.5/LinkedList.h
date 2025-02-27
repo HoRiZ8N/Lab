@@ -41,11 +41,14 @@ template <typename T>
 LinkedList<T>::~LinkedList() {
     delete[] values;
     delete[] next;
+    values = nullptr;
+    next = nullptr;
 }
 
 template <typename T>
 void LinkedList<T>::add(T value) {
     if (free == -1) {
+        std::cout << "[No free space to add element]\n";
         return;
     }
     int newElement = free;
@@ -85,6 +88,12 @@ void LinkedList<T>::insert(T value, int position) {
 template <typename T>
 void LinkedList<T>::remove(int position) {
     if (head == -1) {
+        std::cout << "[List is empty.]\n";
+        return;
+    }
+
+    if (position < 0 || position >= listSize()) {
+        std::cout << "[Invalid position.]\n";
         return;
     }
 
@@ -98,20 +107,27 @@ void LinkedList<T>::remove(int position) {
 
     int current = head;
     for (int i = 0; i < position - 1; ++i) {
-        if (current == -1) {
-            return;
-        }
         current = next[current];
-    }
-
-    if (next[current] == -1) {
-        return;
     }
 
     int temp = next[current];
     next[current] = next[temp];
     next[temp] = free;
     free = temp;
+}
+
+template <typename T>
+int LinkedList<T>::find(T value) {
+    int current = head;
+    int position = 0;
+    while (current != -1) {
+        if (values[current] == value) {
+            return position;
+        }
+        current = next[current];
+        position++;
+    }
+    return -1;
 }
 
 template <typename T>
@@ -122,18 +138,6 @@ void LinkedList<T>::print() {
         current = next[current];
     }
     std::cout << "\n";
-}
-
-template <typename T>
-int LinkedList<T>::find(T value) {
-    int current = head;
-    while (current != -1) {
-        if (values[current] == value) {
-            return current; 
-        }
-        current = next[current];
-    }
-    return -1;
 }
 
 template <typename T>
@@ -150,7 +154,10 @@ int LinkedList<T>::listSize() {
 template <typename T>
 LinkedList<T> LinkedList<T>::formListWithTwoOccurrences() {
     LinkedList<T> result(size);
+    T* toRemove = new T[size];
+    int toRemoveCount = 0;
     int current = head;
+
     while (current != -1) {
         T value = values[current];
         int occurrences = 0;
@@ -163,8 +170,21 @@ LinkedList<T> LinkedList<T>::formListWithTwoOccurrences() {
         }
         if (occurrences == 2 && result.find(value) == -1) {
             result.add(value);
+            toRemove[toRemoveCount++] = value;
         }
         current = next[current];
     }
+
+    for (int i = 0; i < toRemoveCount; ++i) {
+        T value = toRemove[i];
+        int pos = find(value);
+        while (pos != -1) {
+            remove(pos);
+            pos = find(value); // Обновление позиции после удаления
+        }
+    }
+
+    delete[] toRemove;
     return result;
 }
+

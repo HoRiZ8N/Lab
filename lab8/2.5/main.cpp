@@ -54,13 +54,15 @@ int main()
     LinkedList<char> myList(arrSize);
     fillList(myList, arrSize, initType);
 
-    std::cout << "Values:\n";
+    std::cout << "Initial list:\n";
     myList.print();
-    
+
     LinkedList<char> listWithTwoOccurrences = myList.formListWithTwoOccurrences();
 
-    std::cout << "\nSymbols that appear exactly twice:\n";
+    std::cout << "Updated list:\n";
     myList.print();
+
+    std::cout << "\nSymbols that appear exactly twice:\n";
     listWithTwoOccurrences.print();
 
     return 0;
