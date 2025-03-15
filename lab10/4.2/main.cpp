@@ -24,8 +24,11 @@ int main()
 {
     std::ifstream input;
     input.open("input.txt");
+    
     LinkedList<char> list;
     input >> list;
     std::cout << FormListWithTwoOccurrences(list);
     input.close();
+
+    return 0;
 }

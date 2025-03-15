@@ -23,15 +23,14 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const LinkedList &list) {
         typename LinkedList<T>::Node* current = list.head;
-        os << "[";
         while (current != nullptr) {
             os << current->m_data;
             if (current->m_next != nullptr) {
-                os << ", ";
+                os << " ";
             }
             current = current->m_next;
         }
-        os << "]";
+        os << " ";
         return os;
     }
     friend std::istream &operator>>(std::istream &is, LinkedList<T> &list) {
