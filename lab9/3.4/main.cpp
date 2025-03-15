@@ -8,16 +8,40 @@ struct Student {
     std::string gender;
     int year;
     double mark;
-
-    void print(std::ostream &os) const {
-        os << name << ' ' << age << ' ' << gender << ' ' << year << ' ' << mark << '\n';
-    }
 };
 
-int main() {
-    const char FirstChar = 'A';
-    const int Course = 1;
+void print(const Student& student, std::ofstream& output) {
+    output << student.name << " " << student.age << " " 
+           << student.gender << " " << student.year << " " 
+           << student.mark << std::endl;
+}
 
+void displayFileContent(const std::string& filename) {
+    std::ifstream input(filename);
+    if (!input.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return;
+    }
+
+    Student student;
+    while (input >> student.name >> student.age >> student.gender >> student.year >> student.mark) {
+        std::cout << student.name << " " << student.age << " "
+                  << student.gender << " " << student.year << " "
+                  << student.mark << std::endl;
+    }
+    std::cout << std::endl;
+}
+
+void processFiles(std::ifstream& input, std::ofstream& output, const char FirstChar, const int Course) {
+    Student student;
+    while (input >> student.name >> student.age >> student.gender >> student.year >> student.mark) {
+        if (student.name[0] == FirstChar && student.year == Course) {
+            print(student, output);
+        }
+    }
+}
+
+int main() {
     std::ifstream input("input.txt");
     std::ofstream output("output.txt");
 
@@ -25,17 +49,14 @@ int main() {
         std::cerr << "Error opening file.\n";
         return 1;
     }
+    
+    processFiles(input, output, 'A', 1);
+    
+    displayFileContent("input.txt");
+    displayFileContent("output.txt");
 
-    std::string data;
-    Student student;
-
-
-    while (input >> student.name >> student.age >> student.gender >> student.year >> student.mark) {
-        if (student.name[0] == FirstChar && student.year == Course)
-        {
-            student.print(output);  
-        }
-    }
+    input.close();
+    output.close();
 
     return 0;
 }

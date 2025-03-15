@@ -1,64 +1,109 @@
-#include <fstream>
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <time.h>
 
-bool isEven(int num) {
+bool isEven(int num)
+{
     return num % 2 == 0;
 }
 
-int main() {
-    std::ifstream input;
-    std::ofstream output;
-    input.open("input.dat", std::ios_base::binary);
-    output.open("output.dat", std::ios_base::binary);
-    if (!input.is_open() || !output.is_open()) {
-        std::cerr << "Error opening file.\n";
-        return 1;
+void generateFile(const std::string &inputFile, const unsigned int size)
+{
+    if (!isEven(size))
+    {
+        std::cerr << "Size must be even!" << std::endl;
+        return;
     }
-    int count = 0;
 
+    std::ofstream file(inputFile, std::ios::binary);
+    if (!file.is_open())
+    {
+        std::cerr << "Error opening file!" << std::endl;
+        return;
+    }
+
+    int evens = size / 2, odds = size / 2;
+    srand(time(0));
+    while (evens > 0 || odds > 0)
+    {
+        int num = rand() % 1000;
+        if (isEven(num) && evens == 0)
+        {
+            continue;
+        }
+        if (!isEven(num) && odds == 0)
+        {
+            continue;
+        }
+        isEven(num) ? evens-- : odds--;
+        file.write(reinterpret_cast<char*>(&num), sizeof(num));
+    }
+}
+
+void printFile(const std::string &fileName)
+{
     int num;
-    while (input.read(reinterpret_cast<char*>(&num), sizeof(num))) {
-        if (isEven(num)) {
-            count++;
-        } else {
-            count--;
-        }
+    std::ifstream file(fileName, std::ios::binary);
+    while (file.read(reinterpret_cast<char*>(&num), sizeof(num)))
+    {
+        std::cout << num << " ";
     }
-    if (count != 0) {
-        std::cerr << "Warning: The number of even and odd numbers is not equal.\n";
+    std::cout << std::endl;
+}
+
+void createFile(const std::string &inputFile, const std::string &outputFile)
+{
+    std::ifstream input(inputFile, std::ios::binary);
+    std::ofstream output(outputFile, std::ios::binary);
+
+    if (!input.is_open() || !output.is_open())
+    {
+        std::cerr << "Error opening file!" << std::endl;
+        return;
     }
+
+    // Первое прохождение: считаем общее количество четных и нечетных чисел
+    int evenCount = 0, oddCount = 0, number;
+    while (input.read(reinterpret_cast<char*>(&number), sizeof(number)))
+    {
+        isEven(number) ? ++evenCount : ++oddCount;
+    }
+
+    // Проверяем равное количество четных и нечетных чисел
+    if (evenCount != oddCount)
+    {
+        std::cerr << "The file cannot be generated because the number of even and odd numbers does not match!" << std::endl;
+        return;
+    }
+
+    // Возвращаемся в начало файла
     input.clear();
-    input.seekg(0, input.beg);
-    if (!input.read(reinterpret_cast<char*>(&num), sizeof(num))) {
-        std::cerr << "File is empty or invalid data.\n";
-        return 1;
-    }
-    output.write(reinterpret_cast<char*>(&num), sizeof(num));
-    bool isPrevEven = isEven(num);
-    while (input.read(reinterpret_cast<char*>(&num), sizeof(num))) {
-        if (isEven(num) != isPrevEven) {
-            output.write(reinterpret_cast<char*>(&num), sizeof(num));
+    input.seekg(0);
+
+    std::ifstream evenStream(inputFile, std::ios::binary);
+    std::ifstream oddStream(inputFile, std::ios::binary);
+
+    // Чередуем числа и записываем в выходной файл
+    for (int i = 0; i < evenCount * 2; ++i)
+    {
+        if (isEven(i))
+        {
+            while (evenStream.read(reinterpret_cast<char*>(&number), sizeof(number)) && !isEven(number)) {}
         }
-        isPrevEven = isEven(num);
+        else
+        {
+            while (oddStream.read(reinterpret_cast<char*>(&number), sizeof(number)) && isEven(number)) {}
+        }
+        output.write(reinterpret_cast<char*>(&number), sizeof(number));
     }
+}
 
-    input.close();
-    output.close();
-    
-    std::ifstream binaryInput("output.dat", std::ios_base::binary);
-    std::ofstream textOutput("output.txt");
-
-    if (!binaryInput.is_open() || !textOutput.is_open()) {
-        std::cerr << "Error opening output.dat or output.txt.\n";
-        return 1;
-    }
-
-    while (binaryInput.read(reinterpret_cast<char*>(&num), sizeof(num))) {
-        textOutput << num << ' ';
-    }
-
-    
-    std::cout << "File processed successfully.\n";
-
+int main()
+{
+    generateFile("f.dat", 10);
+    createFile("f.dat", "g.dat");
+    printFile("f.dat");
+    printFile("g.dat");
     return 0;
 }

@@ -3,53 +3,45 @@
 #include <string>
 
 struct Student {
-    std::string name;
+    char name[50];
     int age;
-    std::string gender;
+    char gender[10];
     int year;
     double mark;
-
-    void print(std::ostream &os) const {
-        os << name << ' ' << age << ' ' << gender << ' ' << year << ' ' << mark << '\n';
-    }
-
-    void writeToBinary(std::ofstream &out) const {
-        size_t nameLen = name.size();
-        out.write(reinterpret_cast<const char*>(&nameLen), sizeof(nameLen));
-        out.write(name.c_str(), nameLen);
-
-        out.write(reinterpret_cast<const char*>(&age), sizeof(age));
-
-        size_t genderLen = gender.size();
-        out.write(reinterpret_cast<const char*>(&genderLen), sizeof(genderLen));
-        out.write(gender.c_str(), genderLen);
-
-        out.write(reinterpret_cast<const char*>(&year), sizeof(year));
-        out.write(reinterpret_cast<const char*>(&mark), sizeof(mark));
-    }
-
-    void readFromBinary(std::ifstream &in) {
-        size_t nameLen;
-        in.read(reinterpret_cast<char*>(&nameLen), sizeof(nameLen));
-        name.resize(nameLen);
-        in.read(&name[0], nameLen);
-
-        in.read(reinterpret_cast<char*>(&age), sizeof(age));
-
-        size_t genderLen;
-        in.read(reinterpret_cast<char*>(&genderLen), sizeof(genderLen));
-        gender.resize(genderLen);
-        in.read(&gender[0], genderLen);
-
-        in.read(reinterpret_cast<char*>(&year), sizeof(year));
-        in.read(reinterpret_cast<char*>(&mark), sizeof(mark));
-    }
 };
 
-int main() {
-    const char FirstChar = 'A';
-    const int Course = 1;
+void print(const Student& student, std::ofstream& output) {
+    output.write(reinterpret_cast<const char*>(&student), sizeof(student));
+}
 
+void displayFileContent(const std::string& filename) {
+    std::ifstream input(filename, std::ios::binary);
+    if (!input.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return;
+    }
+
+    Student student;
+    while (input.read(reinterpret_cast<char*>(&student), sizeof(student))) {
+        std::cout << student.name << " " << student.age << " "
+                  << student.gender << " " << student.year << " "
+                  << student.mark << std::endl;
+    }
+
+    input.close();
+}
+
+void processFiles(std::ifstream& input, std::ofstream& output, const char FirstChar, const int Course) {
+    Student student;
+    while (input.read(reinterpret_cast<char*>(&student), sizeof(student))) {
+        if (student.name[0] == FirstChar && student.year == Course) {
+            print(student, output);
+        }
+    }
+}
+
+
+int main() {
     std::ifstream input("input.dat", std::ios::binary);
     std::ofstream output("output.dat", std::ios::binary);
 
@@ -57,15 +49,14 @@ int main() {
         std::cerr << "Error opening file.\n";
         return 1;
     }
+    
+    processFiles(input, output, 'A', 1);
+    displayFileContent("input.dat");
+    displayFileContent("output.dat");
 
-    Student student;
-
-    while (input.peek() != EOF) {
-        student.readFromBinary(input);
-        if (student.name[0] == FirstChar && student.year == Course) {
-            student.writeToBinary(output);
-        }
-    }
+    input.close();
+    output.close();
 
     return 0;
 }
+

@@ -1,2 +1,2 @@
-Alex 17 male 1 6.21
-Alex 12 female 1 20.5
+Alex 17 male 1 7.25
+Anastasia 17 female 1 9.21
