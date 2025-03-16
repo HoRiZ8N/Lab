@@ -12,9 +12,9 @@ public:
     MyVector(); // default constructor
     MyVector(size_t capacity); // parameterized constructor
     MyVector(const MyVector &other); // copy constructor
-    MyVector(MyVector &&move) noexcept; // move constructor
+    MyVector(MyVector &&move); // move constructor
     MyVector &operator=(const MyVector &other); // copy assignment operator
-    MyVector &operator=(MyVector &&other) noexcept; // move assignment operator
+    MyVector &operator=(MyVector &&other); // move assignment operator
     ~MyVector(); // destructor
 
     void PushBack(T data);
@@ -59,7 +59,7 @@ MyVector<T>::MyVector(const MyVector &other)
 }
 
 template <typename T>
-MyVector<T>::MyVector(MyVector &&move) noexcept
+MyVector<T>::MyVector(MyVector &&move)
     : m_Data(move.m_Data), m_Size(move.m_Size), m_Capacity(move.m_Capacity)
 {
     move.m_Data = nullptr;
@@ -86,7 +86,7 @@ MyVector<T> &MyVector<T>::operator=(const MyVector &other)
 }
 
 template <typename T>
-MyVector<T> &MyVector<T>::operator=(MyVector &&other) noexcept
+MyVector<T> &MyVector<T>::operator=(MyVector &&other)
 {
     if (this != &other)
     {

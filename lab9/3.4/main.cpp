@@ -18,18 +18,24 @@ void print(const Student& student, std::ofstream& output) {
 
 void displayFileContent(const std::string& filename) {
     std::ifstream input(filename);
+
     if (!input.is_open()) {
-        std::cerr << "Error opening file: " << filename << std::endl;
+        std::cerr << "Error opening file: " << filename << '\n';
         return;
     }
 
     Student student;
+    std::cout << "Content of " << filename << ":\n";
     while (input >> student.name >> student.age >> student.gender >> student.year >> student.mark) {
-        std::cout << student.name << " " << student.age << " "
-                  << student.gender << " " << student.year << " "
-                  << student.mark << std::endl;
+        std::cout << student.name << " "
+                  << student.age << " "
+                  << student.gender << " "
+                  << student.year << " "
+                  << student.mark << "\n";
     }
+
     std::cout << std::endl;
+    input.close();
 }
 
 void processFiles(std::ifstream& input, std::ofstream& output, const char FirstChar, const int Course) {
@@ -42,8 +48,11 @@ void processFiles(std::ifstream& input, std::ofstream& output, const char FirstC
 }
 
 int main() {
-    std::ifstream input("input.txt");
-    std::ofstream output("output.txt");
+    const std::string inputFile = "input.txt";
+    const std::string outputFile = "output.txt";
+
+    std::ifstream input(inputFile);
+    std::ofstream output(outputFile);
 
     if (!input.is_open() || !output.is_open()) {
         std::cerr << "Error opening file.\n";
@@ -52,8 +61,8 @@ int main() {
     
     processFiles(input, output, 'A', 1);
     
-    displayFileContent("input.txt");
-    displayFileContent("output.txt");
+    displayFileContent(inputFile);
+    displayFileContent(outputFile);
 
     input.close();
     output.close();
