@@ -21,26 +21,11 @@ public:
     void PopBack(); // delete last
     size_t Size(); // get the size of the list
 
-    friend std::ostream &operator<<(std::ostream &os, const LinkedList &list) {
-        typename LinkedList<T>::Node* current = list.head;
-        while (current != nullptr) {
-            os << current->m_data;
-            if (current->m_next != nullptr) {
-                os << " ";
-            }
-            current = current->m_next;
-        }
-        os << " ";
-        return os;
-    }
-    friend std::istream &operator>>(std::istream &is, LinkedList<T> &list) {
-        T value;
-        list.Clear();
-        while (is >> value) {
-            list.PushBack(value);
-        }
-        return is;
-    }
+    template <typename U>
+    friend std::ostream &operator<<(std::ostream &os, const LinkedList<U> &list);
+
+    template <typename U>
+    friend std::istream &operator>>(std::istream &is, LinkedList<U> &list);
 
 private:
     struct Node
@@ -267,4 +252,30 @@ void LinkedList<T>::Clear()
         current = next;
     }
     head = nullptr;
+}
+
+template <typename U>
+std::ostream &operator<<(std::ostream &os, const LinkedList<U> &list)
+{
+    typename LinkedList<U>::Node* current = list.head;
+    while (current != nullptr) {
+        os << current->m_data;
+        if (current->m_next != nullptr) {
+            os << " ";
+        }
+        current = current->m_next;
+    }
+    os << " ";
+    return os;
+}
+
+template <typename U>
+std::istream &operator>>(std::istream &is, LinkedList<U> &list)
+{
+    U value;
+    list.Clear();
+    while (is >> value) {
+        list.PushBack(value);
+    }
+    return is;
 }

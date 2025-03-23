@@ -145,16 +145,10 @@ const T &MyVector<T>::operator[](size_t index) const
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const MyVector<T> &vector)
 {
-    os << "{";
     for (size_t i = 0; i < vector.m_Size; i++)
     {
-        os << vector.m_Data[i];
-        if (i < vector.m_Size - 1)
-        {
-            os << ", ";
-        }
+        os << vector.m_Data[i] << " ";
     }
-    os << "}";
     return os;
 }
 
