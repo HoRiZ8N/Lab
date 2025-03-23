@@ -21,8 +21,11 @@ public:
     T &operator[](size_t index);
     const T &operator[](size_t index) const;
 
-    friend std::ostream &operator<<(std::ostream &os, const MyVector &vector);
-    friend std::istream &operator>>(std::istream &is, MyVector<T> &vector);
+    template <typename U>
+    friend std::ostream &operator<<(std::ostream &os, const MyVector<U> &vector);
+
+    template <typename U>
+    friend std::istream &operator>>(std::istream &is, MyVector<U> &vector);
 
     size_t Size() const;
     size_t Capacity() const;

@@ -59,12 +59,17 @@ int main() {
         return 1;
     }
 
-    std::cout << "Missing numbers in ascending order:\n";
-    for (int i = 1; i <= 100; ++i) {
-        if (!array[i]) {
-            std::cout << i << " ";
+    MyVector<int> result;
+    for (int i = 1; i < 100; i++)
+    {
+        if (!array[i])
+        {
+            result.PushBack(i);
         }
     }
+
+    std::cout << "Missing numbers in ascending order:\n";
+    std::cout << result;
     std::cout << "\n";
 
     return 0;
