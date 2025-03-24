@@ -10,16 +10,18 @@ public:
     LinkedList(); // default constructor
     LinkedList(T data); // constructor with initial data
     LinkedList(const LinkedList &other); // copy constructor
-    LinkedList(LinkedList &&move) noexcept; // move constructor
+    LinkedList(LinkedList &&move); // move constructor
     ~LinkedList(); // destructor
     LinkedList &operator=(const LinkedList &other); // copy assignment operator
-    LinkedList &operator=(LinkedList &&other) noexcept; // move assignment operator
+    LinkedList &operator=(LinkedList &&other); // move assignment operator
     void PushBack(T data); // add an element to the end
     void Push(T data, size_t index);
     T Search(size_t index); // Search an element by index
     void Pop(size_t index); // delete an element by index
     void PopBack(); // delete last
     size_t Size(); // get the size of the list
+    size_t SearchByKey(const T& key); // get index by value
+    void Clear(); // delete list
 
     template <typename U>
     friend std::ostream &operator<<(std::ostream &os, const LinkedList<U> &list);
@@ -37,10 +39,29 @@ private:
         Node(T myData) : m_next(nullptr), m_data(myData) {}
     };
 
-    Node* head;
-
-    void Clear();
+    Node* head; 
 };
+
+template <typename T>
+size_t LinkedList<T>::SearchByKey(const T& key)
+{
+    Node* current = head;
+    size_t index = 0;
+
+    while (current != nullptr)
+    {
+        if (current->m_data == key) 
+        {
+            return index; 
+        }
+        current = current->m_next;
+        index++; 
+    }
+
+    throw std::runtime_error("Key not found"); 
+}
+
+
 
 template <typename T>
 LinkedList<T>::LinkedList() : head(nullptr) {}
@@ -69,7 +90,7 @@ LinkedList<T>::LinkedList(const LinkedList &other) : head(nullptr)
 }
 
 template <typename T>
-LinkedList<T>::LinkedList(LinkedList &&move) noexcept : head(move.head)
+LinkedList<T>::LinkedList(LinkedList &&move) : head(move.head)
 {
     move.head = nullptr;
 }
@@ -105,7 +126,7 @@ LinkedList<T> &LinkedList<T>::operator=(const LinkedList &other)
 }
 
 template <typename T>
-LinkedList<T>& LinkedList<T>::operator=(LinkedList&& other) noexcept
+LinkedList<T>& LinkedList<T>::operator=(LinkedList&& other)
 {
     Clear(); 
     head = other.head; 

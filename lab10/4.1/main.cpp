@@ -1,6 +1,7 @@
 #include <iostream>
 #include "MyVector.h"
 #include <ctime>
+#include <cstdlib>
 
 const unsigned int MAX_VAL = 10'000'000;
 const unsigned long long MAX_SEQUENCE_SIZE = 1'000'000'000'000;

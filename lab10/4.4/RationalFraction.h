@@ -23,8 +23,8 @@ public:
 
     void print() const;
     void reduce();
-    int getNumerator();
-    int getDenomerator();
+    int getNumerator() const;
+    int getDenomerator() const;
     void setNumerator(int num);
     void setDenominator(int num);
 

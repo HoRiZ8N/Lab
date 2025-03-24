@@ -2,7 +2,7 @@
 #include <numeric>
 #include <iostream>
 
-RationalFraction::RationalFraction(int num = 0, int denom = 1) : numerator(num), denominator(denom) {
+RationalFraction::RationalFraction(int num, int denom) : numerator(num), denominator(denom) {
     if (denominator == 0) {
         throw std::invalid_argument("Denominator cannot be zero");
     }
@@ -84,7 +84,7 @@ bool RationalFraction::operator>=(const RationalFraction &other) const {
 
 void RationalFraction::print() const {
     std::cout << numerator << "/" << denominator;
-}
+}   
 
 void RationalFraction::reduce() {
     int gcd = std::gcd(numerator, denominator);
@@ -96,12 +96,12 @@ void RationalFraction::reduce() {
     }
 }
 
-int RationalFraction::getNumerator()
+int RationalFraction::getNumerator() const
 {
     return numerator;
 }
 
-int RationalFraction::getDenomerator()
+int RationalFraction::getDenomerator() const
 {
     return denominator;
 }
@@ -111,7 +111,10 @@ void RationalFraction::setNumerator(int num)
     numerator = num;
 }
 
-void RationalFraction::setDenominator(int num)
-{
+void RationalFraction::setDenominator(int num) {
+    if (num == 0) {
+        throw std::invalid_argument("Denominator cannot be zero");
+    }
     denominator = num;
+    reduce(); 
 }

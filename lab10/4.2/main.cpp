@@ -1,5 +1,22 @@
 #include "LinkedList.h"
 #include <fstream>
+#include <string>
+#include <iostream>
+
+void printFile(const std::string& fileName) {
+    std::ifstream fin(fileName); 
+    if (!fin) {
+        std::cerr << "Error: Could not open file " << fileName << std::endl;
+        return;
+    }
+
+    char ch;
+    while (fin.get(ch)) { 
+        std::cout << ch;
+    }
+    std::cout << std::endl;
+}
+
 
 LinkedList<char> FormListWithTwoOccurrences(LinkedList<char>& L1) {
     const short charSize = 256;
@@ -27,7 +44,9 @@ int main()
     
     LinkedList<char> list;
     input >> list;
+    printFile("input.txt");
     std::cout << FormListWithTwoOccurrences(list);
+    std::cout << std::endl;
     input.close();
 
     return 0;

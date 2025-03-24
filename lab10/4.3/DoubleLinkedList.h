@@ -8,10 +8,10 @@ public:
     DoubleLinkedList();
     DoubleLinkedList(T data); 
     DoubleLinkedList(const DoubleLinkedList &other); 
-    DoubleLinkedList(DoubleLinkedList &&move) noexcept; 
+    DoubleLinkedList(DoubleLinkedList &&move); 
     ~DoubleLinkedList();
     DoubleLinkedList &operator=(const DoubleLinkedList &other); 
-    DoubleLinkedList &operator=(DoubleLinkedList &&other) noexcept; 
+    DoubleLinkedList &operator=(DoubleLinkedList &&other); 
 
     T& operator[](unsigned int index);
     const T& operator[](unsigned int index) const;
@@ -20,7 +20,7 @@ public:
     void Remove(T data);
     void Print() const;
     void Clear(); 
-    T* Find(const T& key) const;
+    size_t Find(const T& key) const;
     int Size() const;  
 
 private:
@@ -36,7 +36,7 @@ private:
 
     Node* head;
     Node* tail;
-    unsigned int size;
+    size_t size;
 };
 
 template <typename T>
@@ -67,7 +67,7 @@ DoubleLinkedList<T>::DoubleLinkedList(const DoubleLinkedList &other) : head(null
 }
 
 template <typename T>
-DoubleLinkedList<T>::DoubleLinkedList(DoubleLinkedList &&move) noexcept : head(move.head), tail(move.tail)
+DoubleLinkedList<T>::DoubleLinkedList(DoubleLinkedList &&move) : head(move.head), tail(move.tail)
 {
     move.head = nullptr;
     move.tail = nullptr;
@@ -82,10 +82,10 @@ DoubleLinkedList<T>::~DoubleLinkedList()
 template <typename T>
 DoubleLinkedList<T> &DoubleLinkedList<T>::operator=(const DoubleLinkedList &other)
 {
-    if (this != &other) // Check for self-assignment
+    if (this != &other)
     {
-        Clear(); // Clean up current list
-        if (other.head == nullptr) return *this; // Handle empty list
+        Clear(); 
+        if (other.head == nullptr) return *this; 
 
         head = new Node(other.head->m_data);
         tail = head;
@@ -99,17 +99,17 @@ DoubleLinkedList<T> &DoubleLinkedList<T>::operator=(const DoubleLinkedList &othe
             current = current->m_next;
             otherCurrent = otherCurrent->m_next;
         }
-        tail = current; // Update tail
+        tail = current;
     }
     return *this;
 }
 
 template <typename T>
-DoubleLinkedList<T> &DoubleLinkedList<T>::operator=(DoubleLinkedList &&other) noexcept
+DoubleLinkedList<T> &DoubleLinkedList<T>::operator=(DoubleLinkedList &&other)
 {
-    if (this != &other) // Check for self-assignment
+    if (this != &other) 
     {
-        Clear(); // Clean up current list
+        Clear(); 
         head = other.head;
         tail = other.tail;
         other.head = nullptr;
@@ -186,18 +186,22 @@ void DoubleLinkedList<T>::Clear()
 }
 
 template <typename T>
-T* DoubleLinkedList<T>::Find(const T& key) const
+size_t DoubleLinkedList<T>::Find(const T& key) const
 {
     Node* current = head;
+    size_t index = 0;
+
     while (current != nullptr)
     {
-        if (current->m_data == key)
+        if (current->m_data == key) 
         {
-            return &current->m_data;
+            return index; 
         }
-        current = current->m_next;
+        current = current->m_next; 
+        index++; 
     }
-    return nullptr;
+
+    throw std::runtime_error("Key not found"); 
 }
 
 template <typename T>
