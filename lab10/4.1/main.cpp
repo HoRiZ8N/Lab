@@ -71,7 +71,7 @@ int main() {
 
     std::cout << "Missing numbers in ascending order:\n";
     std::cout << result;
-    std::cout << "\n";
+    std::cout << std::endl;
 
     return 0;
 }

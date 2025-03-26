@@ -4,8 +4,9 @@ template <typename T>
 T CalculateExpression(const DoubleLinkedList<T> &list)
 {
     unsigned int size = list.Size();
-    if (size < 2)
+    if (size < 2) {
         return 0;
+    }
 
     T result = 0;
     for (unsigned int i = 0; i < size - 1; ++i)

@@ -34,9 +34,9 @@ int main()
         int value = list.Search(3);
         std::cout << "Element at index 3: " << value << std::endl;
 
-        // Testing SearchByKey
+        // Testing GetIndex
         std::cout << "\nFinding index of element with value 25...\n";
-        size_t index = list.SearchByKey(25);
+        size_t index = list.GetIndex(25);
         std::cout << "Index of element 25: " << index << std::endl;
 
         // Testing Pop (removal by index)

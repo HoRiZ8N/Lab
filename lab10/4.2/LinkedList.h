@@ -20,7 +20,7 @@ public:
     void Pop(size_t index); // delete an element by index
     void PopBack(); // delete last
     size_t Size(); // get the size of the list
-    size_t SearchByKey(const T& key); // get index by value
+    size_t GetIndex(const T& key); // get index by value
     void Clear(); // delete list
 
     template <typename U>
@@ -43,7 +43,7 @@ private:
 };
 
 template <typename T>
-size_t LinkedList<T>::SearchByKey(const T& key)
+size_t LinkedList<T>::GetIndex(const T& key)
 {
     Node* current = head;
     size_t index = 0;

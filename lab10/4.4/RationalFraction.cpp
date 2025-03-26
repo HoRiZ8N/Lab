@@ -11,34 +11,6 @@ RationalFraction::RationalFraction(int num, int denom) : numerator(num), denomin
 
 RationalFraction::RationalFraction() : numerator(0), denominator(1) {}
 
-RationalFraction::~RationalFraction() {}
-
-RationalFraction::RationalFraction(const RationalFraction &other) : numerator(other.numerator), denominator(other.denominator) {}
-
-RationalFraction::RationalFraction(RationalFraction &&move) noexcept 
-    : numerator(move.numerator), denominator(move.denominator) {
-    move.numerator = 0;
-    move.denominator = 1;
-}
-
-RationalFraction &RationalFraction::operator=(const RationalFraction &other) {
-    if (this != &other) {
-        numerator = other.numerator;
-        denominator = other.denominator;
-    }
-    return *this;
-}
-
-RationalFraction &RationalFraction::operator=(RationalFraction &&other) noexcept {
-    if (this != &other) {
-        numerator = other.numerator;
-        denominator = other.denominator;
-        other.numerator = 0;
-        other.denominator = 1;
-    }
-    return *this;
-}
-
 bool RationalFraction::operator==(const RationalFraction &other) const {
     return numerator == other.numerator && denominator == other.denominator;
 }

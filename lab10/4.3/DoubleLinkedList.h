@@ -6,7 +6,7 @@ class DoubleLinkedList
 {
 public:
     DoubleLinkedList();
-    DoubleLinkedList(T data); 
+    DoubleLinkedList(T data);
     DoubleLinkedList(const DoubleLinkedList &other); 
     DoubleLinkedList(DoubleLinkedList &&move); 
     ~DoubleLinkedList();
