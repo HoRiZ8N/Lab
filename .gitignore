@@ -1,2 +1,12 @@
 **/.vscode/*
 **/*.exe
+
+.DS_Store
+._*
+
+*.o
+*.out
+*.a
+*.so
+*.dylib
+build/
