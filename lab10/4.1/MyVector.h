@@ -9,13 +9,14 @@ template <typename T>
 class MyVector
 {
 public:
-    MyVector(); // default constructor
-    MyVector(size_t capacity); // parameterized constructor
-    MyVector(const MyVector &other); // copy constructor
-    MyVector(MyVector &&move); // move constructor
-    MyVector &operator=(const MyVector &other); // copy assignment operator
-    MyVector &operator=(MyVector &&other); // move assignment operator
-    ~MyVector(); // destructor
+    MyVector(); 
+    MyVector(size_t size, const T& initialValue);
+    MyVector(size_t capacity); 
+    MyVector(const MyVector &other);
+    MyVector(MyVector &&move); 
+    MyVector &operator=(const MyVector &other);
+    MyVector &operator=(MyVector &&other); 
+    ~MyVector();
 
     void PushBack(T data);
     T &operator[](size_t index);
@@ -29,6 +30,7 @@ public:
 
     size_t Size() const;
     size_t Capacity() const;
+    void Resize(size_t newSize, const T& value = T());
 
 private:
     void ReAlloc(size_t newCapacity);
@@ -37,6 +39,15 @@ private:
     size_t m_Size = 0;
     size_t m_Capacity = 0;
 };
+
+template <typename T>
+MyVector<T>::MyVector(size_t size, const T& initialValue) {
+    ReAlloc(size);
+    for (size_t i = 0; i < size; ++i) {
+        m_Data[i] = initialValue;
+    }
+    m_Size = size;
+}
 
 template <typename T>
 MyVector<T>::MyVector()
@@ -187,3 +198,17 @@ void MyVector<T>::ReAlloc(size_t newCapacity)
     m_Data = newBlock;
     m_Capacity = newCapacity;
 }
+
+template <typename T>
+void MyVector<T>::Resize(size_t newSize, const T& value) 
+{
+    if (newSize > m_Capacity) {
+        ReAlloc(newSize);
+    }
+    for (size_t i = m_Size; i < newSize; ++i) {
+        m_Data[i] = value;
+    }
+    m_Size = newSize;
+}
+
+
