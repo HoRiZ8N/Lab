@@ -1,12 +1,13 @@
 #include "RationalFraction.h"
 #include <numeric>
 #include <iostream>
+#include <numeric>
 
 RationalFraction::RationalFraction(int num, int denom) : numerator(num), denominator(denom) {
     if (denominator == 0) {
         throw std::invalid_argument("Denominator cannot be zero");
     }
-    reduce();
+    normalize();
 }
 
 RationalFraction::RationalFraction() : numerator(0), denominator(1) {}
@@ -58,7 +59,7 @@ void RationalFraction::print() const {
     std::cout << numerator << "/" << denominator;
 }   
 
-void RationalFraction::reduce() {
+void RationalFraction::normalize() {
     int gcd = std::gcd(numerator, denominator);
     numerator /= gcd;
     denominator /= gcd;
@@ -73,7 +74,7 @@ int RationalFraction::getNumerator() const
     return numerator;
 }
 
-int RationalFraction::getDenomerator() const
+int RationalFraction::getDenominator() const
 {
     return denominator;
 }
@@ -88,5 +89,5 @@ void RationalFraction::setDenominator(int num) {
         throw std::invalid_argument("Denominator cannot be zero");
     }
     denominator = num;
-    reduce(); 
+    normalize(); 
 }

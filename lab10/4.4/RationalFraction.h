@@ -17,9 +17,9 @@ public:
     bool operator>=(const RationalFraction &other) const;
 
     void print() const;
-    void reduce();
+    void normalize();
     int getNumerator() const;
-    int getDenomerator() const;
+    int getDenominator() const;
     void setNumerator(int num);
     void setDenominator(int num);
 
