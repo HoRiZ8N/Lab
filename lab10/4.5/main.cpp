@@ -23,7 +23,7 @@ int main() {
     tree.print();
     std::cout << '\n';
     tree.deleteMin();
-    std::cout << "Tree without minimal value element: ";
+    std::cout << "Tree without minimal value element:\n";
     tree.print();
     std::cout << '\n';
     tree.clear();
