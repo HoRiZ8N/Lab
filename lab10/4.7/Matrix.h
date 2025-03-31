@@ -14,10 +14,11 @@ private:
 public:
     Matrix(size_t rows = 0, size_t cols = 0, const T& value = T());
     Matrix(const Matrix& other);
-    Matrix(Matrix&& other) noexcept;
+    Matrix(Matrix&& other);
+    ~Matrix();
     
     Matrix& operator=(const Matrix& other);
-    Matrix& operator=(Matrix&& other) noexcept;
+    Matrix& operator=(Matrix&& other);
     
     MyVector<T>& operator[](size_t row);
     const MyVector<T>& operator[](size_t row) const;
@@ -62,9 +63,13 @@ Matrix<T>::Matrix(const Matrix& other)
     : m_Name(other.m_Name), m_Data(other.m_Data) {}
 
 template <typename T>
-Matrix<T>::Matrix(Matrix&& other) noexcept
+Matrix<T>::Matrix(Matrix&& other)
     : m_Name(std::move(other.m_Name)), m_Data(std::move(other.m_Data)) {
     other.m_Name = "";
+}
+
+template <typename T> Matrix<T>::~Matrix() {
+    s_MatrixCount--;
 }
 
 template <typename T>
@@ -77,7 +82,7 @@ Matrix<T>& Matrix<T>::operator=(const Matrix& other) {
 }
 
 template <typename T>
-Matrix<T>& Matrix<T>::operator=(Matrix&& other) noexcept {
+Matrix<T>& Matrix<T>::operator=(Matrix&& other) {
     if (this != &other) {
         m_Name = std::move(other.m_Name);
         m_Data = std::move(other.m_Data);
