@@ -165,9 +165,9 @@ MultiDigitInteger MultiDigitInteger::operator*(const MultiDigitInteger& other) c
     MultiDigitInteger result(digits + other.digits, base);
     
     for (size_t i = 0; i < digits; ++i) {
-        uint8_t carry = 0;
+        uint8_t carry = 0;  
         for (size_t j = 0; j < other.digits; ++j) {
-            uint8_t product = data[i] * other.data[j] + result[i + j] + carry;
+            uint16_t product = static_cast<uint16_t>(data[i]) * other.data[j] + result[i + j] + carry;
             result[i + j] = product % base;
             carry = product / base;
         }
