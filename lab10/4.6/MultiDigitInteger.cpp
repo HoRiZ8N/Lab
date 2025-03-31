@@ -120,7 +120,7 @@ std::ostream& operator<<(std::ostream& os, const MultiDigitInteger& num) {
 MultiDigitInteger MultiDigitInteger::operator+(const MultiDigitInteger& other) const {
     if (base != other.base) throw std::invalid_argument("Bases mismatch");
     
-    size_t maxDigits = std::max(digits, other.digits);
+    size_t maxDigits = std::max(digits, other.digits) + 1;
     MultiDigitInteger result(maxDigits, base);
     uint8_t carry = 0;
     

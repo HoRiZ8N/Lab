@@ -23,9 +23,9 @@ public:
     BinaryTree(const T& value);
     ~BinaryTree();
     BinaryTree(const BinaryTree& other);
-    BinaryTree(BinaryTree&& other) noexcept;
+    BinaryTree(BinaryTree&& other);
     BinaryTree& operator=(const BinaryTree& other);
-    BinaryTree& operator=(BinaryTree&& other) noexcept;
+    BinaryTree& operator=(BinaryTree&& other);
 
     void initFirstElement(const T& value);
     void insert(const T& value);
@@ -57,7 +57,7 @@ BinaryTree<T>::BinaryTree(const BinaryTree& other) {
 }
 
 template <typename T>
-BinaryTree<T>::BinaryTree(BinaryTree&& other) noexcept 
+BinaryTree<T>::BinaryTree(BinaryTree&& other) 
     : root(other.root) {
     other.root = nullptr;
 }
@@ -72,7 +72,7 @@ BinaryTree<T>& BinaryTree<T>::operator=(const BinaryTree& other) {
 }
 
 template <typename T>
-BinaryTree<T>& BinaryTree<T>::operator=(BinaryTree&& other) noexcept {
+BinaryTree<T>& BinaryTree<T>::operator=(BinaryTree&& other) {
     if (this != &other) {
         clear();
         root = other.root;
