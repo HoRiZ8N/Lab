@@ -13,16 +13,16 @@
 //     ├── Spacecraft
 //     └── Missile
 
+struct Vector3 {
+    double x;
+    double y;
+    double z;
+    Vector3(double x = 0, double y = 0, double z = 0) : x(x), y(y), z(z) {}
+};
+
 class SpaceEntity {
 protected:
     char* name;
-    struct Vector3 {
-        double x;
-        double y;
-        double z;
-        Vector3(double x = 0, double y = 0, double z = 0) : x(x), y(y), z(z) {}
-    };
-
     static void copyString(const char* source, char*& destination) {
         if (source == nullptr) {
             destination = nullptr;
@@ -60,6 +60,7 @@ public:
         copyString(newName, name);
     }
 
+    virtual SpaceEntity* clone() const = 0;
     virtual void Print(std::ostream& os) const = 0;
     friend std::ostream& operator<<(std::ostream& os, const SpaceEntity& entity) {
         entity.Print(os);
@@ -97,6 +98,8 @@ public:
     double getLuminosity() const { return luminosity; }
     void setLuminosity(double lum) { luminosity = lum; }
 
+    Star* clone() const override { return new Star(*this); }
+
     void Print(std::ostream& os) const override {
         os << "Star [" << (name ? name : "Unnamed") << "] "
            << "Temp: " << temperature << "K, "
@@ -113,6 +116,8 @@ public:
 
     bool hasAtmosphere() const { return atmospherePresent; }
     void setAtmosphere(bool atm) { atmospherePresent = atm; }
+
+    Planet* clone() const override { return new Planet(*this); }
 
     void Print(std::ostream& os) const override {
         os << "Planet [" << (name ? name : "Unnamed") << "] "
@@ -161,6 +166,8 @@ public:
         position.z += velocity.z * time;
     }
 
+    Asteroid* clone() const override { return new Asteroid(*this); }
+
     void Print(std::ostream& os) const override {
         os << "Asteroid [" << (name ? name : "Unnamed") << "] "
            << "Pos: (" << position.x << ", " << position.y << ", " << position.z << "), "
@@ -204,6 +211,8 @@ public:
         if (ammoCount > 0) ammoCount--;
     }
 
+    Spacecraft* clone() const override { return new Spacecraft(*this); }
+
     void Print(std::ostream& os) const override {
         os << (hostile ? "Enemy" : "Friendly") << " Spacecraft [" << (name ? name : "Unnamed") << "] "
            << "Pos: (" << position.x << ", " << position.y << ", " << position.z << "), "
@@ -236,6 +245,8 @@ public:
     }
 
     bool isActive() const { return remainingFuelTime > 0; }
+
+    Missile* clone() const override { return new Missile(*this); }
 
     void Print(std::ostream& os) const override {
         os << "Missile - "
