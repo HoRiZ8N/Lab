@@ -1,0 +1,4 @@
+3
+Star Sun 5778 10
+Planet Earth 288 1 1
+Asteroid Ceres 1.5 2.5 3 4 4.5 5 950

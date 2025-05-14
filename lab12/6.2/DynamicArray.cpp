@@ -79,7 +79,7 @@ void DynamicArray::remove(size_t index) {
 
 void DynamicArray::print() const {
     for (size_t i = 0; i < size; ++i) {
-        data[i]->Print(std::cout);
+        data[i]->print(std::cout);
         std::cout << "\n";
     }
 }
@@ -91,4 +91,99 @@ void DynamicArray::clear() {
     delete[] data;
     data = nullptr;
     size = capacity = 0;
+}
+
+void DynamicArray::save(const std::string& fileName) const {
+    std::ofstream file(fileName);
+    if (!file) throw std::runtime_error("Cannot open file for writing");
+    
+    file << size << "\n";
+    for (size_t i = 0; i < size; ++i) {
+        data[i]->serialize(file);
+    }
+}
+
+void DynamicArray::load(const std::string& fileName) {
+    std::ifstream file(fileName);
+    if (!file) {
+        throw std::runtime_error("Cannot open file for reading");
+    }
+    
+    clear();
+    
+    size_t count;
+    file >> count;
+    file.ignore();
+    
+    for (size_t i = 0; i < count; ++i) {
+        std::string type;
+        if (!(file >> type)) {
+            throw std::runtime_error("Failed to read entity type");
+        }
+        
+        SpaceEntity* entity = nullptr;
+        
+        try {
+            if (type == "Star") {
+                std::string name;
+                double temp, lum;
+                if (!(file >> name >> temp >> lum)) {
+                    throw std::runtime_error("Invalid Star data");
+                }
+                entity = new Star(name.c_str(), temp, lum);
+            }
+            else if (type == "Planet") {
+                std::string name;
+                double temp;
+                bool solid, atmosphere;
+                if (!(file >> name >> temp >> solid >> atmosphere)) {
+                    throw std::runtime_error("Invalid Planet data");
+                }
+                entity = new Planet(name.c_str(), temp, solid, atmosphere);
+            }
+            else if (type == "Asteroid") {
+                std::string name;
+                Vector3 pos, vel;
+                double diameter;
+                if (!(file >> name >> pos.x >> pos.y >> pos.z 
+                          >> vel.x >> vel.y >> vel.z >> diameter)) {
+                    throw std::runtime_error("Invalid Asteroid data");
+                }
+                entity = new Asteroid(name.c_str(), pos, vel, diameter);
+            }
+            else if (type == "Spacecraft") {
+                std::string name;
+                Vector3 pos, vel;
+                double maxSpeed;
+                int ammo;
+                bool hostile;
+                if (!(file >> name >> pos.x >> pos.y >> pos.z 
+                          >> vel.x >> vel.y >> vel.z >> maxSpeed >> ammo >> hostile)) {
+                    throw std::runtime_error("Invalid Spacecraft data");
+                }
+                entity = new Spacecraft(name.c_str(), pos, vel, maxSpeed, ammo, hostile);
+            }
+            else if (type == "Missile") {
+                Vector3 pos, vel;
+                double power, fuelTime;
+                if (!(file >> pos.x >> pos.y >> pos.z 
+                          >> vel.x >> vel.y >> vel.z >> power >> fuelTime)) {
+                    throw std::runtime_error("Invalid Missile data");
+                }
+                entity = new Missile(pos, vel, power, fuelTime);
+            }
+            else {
+                throw std::runtime_error("Unknown entity type: " + type);
+            }
+            
+            if (entity) {
+                add(entity);
+                delete entity; 
+            }
+        }
+        catch (...) {
+            delete entity;
+            throw;
+        }
+    }
 }

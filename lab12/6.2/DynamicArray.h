@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <fstream>
+#include <string>
 #include "../6.1/header.h"
 
 class DynamicArray {
@@ -24,4 +26,6 @@ public:
     void print() const;
     void clear();
     size_t getSize() const { return size; }
+    void save(const std::string& fileName) const;
+    void load(const std::string& fileName);
 };

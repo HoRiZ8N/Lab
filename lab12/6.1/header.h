@@ -60,10 +60,11 @@ public:
         copyString(newName, name);
     }
 
+    virtual void serialize(std::ostream& os) const = 0;
     virtual SpaceEntity* clone() const = 0;
-    virtual void Print(std::ostream& os) const = 0;
+    virtual void print(std::ostream& os) const = 0;
     friend std::ostream& operator<<(std::ostream& os, const SpaceEntity& entity) {
-        entity.Print(os);
+        entity.print(os);
         return os;
     }
 };
@@ -82,13 +83,10 @@ public:
 
     bool getHasSolidSurface() const { return hasSolidSurface; }
     void setSolidSurface(bool solid) { hasSolidSurface = solid; }
-
-    void Print(std::ostream& os) const override {
-        os << "Static Entity: " << (name ? name : "Unnamed");
-    }
 };
 
 class Star : public StaticEntity {
+protected:
     double luminosity;
 
 public:
@@ -100,7 +98,13 @@ public:
 
     Star* clone() const override { return new Star(*this); }
 
-    void Print(std::ostream& os) const override {
+    void serialize(std::ostream& os) const override {
+    os << "Star "
+       << (name ? name : "") << " "
+       << temperature << " "
+       << luminosity << "\n";
+    }
+    void print(std::ostream& os) const override {
         os << "Star [" << (name ? name : "Unnamed") << "] "
            << "Temp: " << temperature << "K, "
            << "Luminosity: " << luminosity << "L";
@@ -108,6 +112,7 @@ public:
 };
 
 class Planet : public StaticEntity {
+protected:
     bool atmospherePresent;
 
 public:
@@ -117,9 +122,17 @@ public:
     bool hasAtmosphere() const { return atmospherePresent; }
     void setAtmosphere(bool atm) { atmospherePresent = atm; }
 
+    void serialize(std::ostream& os) const override {
+        os << "Planet "
+        << (name ? name : "") << " "
+        << temperature << " "
+        << hasSolidSurface << " "
+        << atmospherePresent << "\n";
+    }
+
     Planet* clone() const override { return new Planet(*this); }
 
-    void Print(std::ostream& os) const override {
+    void print(std::ostream& os) const override {
         os << "Planet [" << (name ? name : "Unnamed") << "] "
            << "Temp: " << temperature << "K, "
            << (hasSolidSurface ? "Solid" : "Gas") << ", "
@@ -143,13 +156,10 @@ public:
     void setVelocity(const Vector3& vel) { velocity = vel; }
 
     virtual void Move(double time) = 0;
-
-    void Print(std::ostream& os) const override {
-        os << "Moving Entity: " << (name ? name : "Unnamed");
-    }
 };
 
 class Asteroid : public MovingEntity {
+protected:
     double maxDiameter;
 
 public:
@@ -168,7 +178,15 @@ public:
 
     Asteroid* clone() const override { return new Asteroid(*this); }
 
-    void Print(std::ostream& os) const override {
+    void serialize(std::ostream& os) const override {
+        os << "Asteroid "
+        << (name ? name : "") << " "
+        << position.x << " " << position.y << " " << position.z << " "
+        << velocity.x << " " << velocity.y << " " << velocity.z << " "
+        << maxDiameter << "\n";
+    }
+
+    void print(std::ostream& os) const override {
         os << "Asteroid [" << (name ? name : "Unnamed") << "] "
            << "Pos: (" << position.x << ", " << position.y << ", " << position.z << "), "
            << "Vel: (" << velocity.x << ", " << velocity.y << ", " << velocity.z << "), "
@@ -176,7 +194,8 @@ public:
     }
 };
 
-class Spacecraft : public MovingEntity {
+class Spacecraft : public MovingEntity {\
+protected:
     double maxSpeed;
     int ammoCount;
     bool hostile;
@@ -211,9 +230,17 @@ public:
         if (ammoCount > 0) ammoCount--;
     }
 
+    void serialize(std::ostream& os) const override {
+        os << "Spacecraft "
+        << (name ? name : "") << " "
+        << position.x << " " << position.y << " " << position.z << " "
+        << velocity.x << " " << velocity.y << " " << velocity.z << " "
+        << maxSpeed << " " << ammoCount << " " << hostile << "\n";
+    }
+
     Spacecraft* clone() const override { return new Spacecraft(*this); }
 
-    void Print(std::ostream& os) const override {
+    void print(std::ostream& os) const override {
         os << (hostile ? "Enemy" : "Friendly") << " Spacecraft [" << (name ? name : "Unnamed") << "] "
            << "Pos: (" << position.x << ", " << position.y << ", " << position.z << "), "
            << "Vel: (" << velocity.x << ", " << velocity.y << ", " << velocity.z << "), "
@@ -222,6 +249,7 @@ public:
 };
 
 class Missile : public MovingEntity {
+protected:
     double explosionPower;
     double remainingFuelTime;
 
@@ -248,7 +276,14 @@ public:
 
     Missile* clone() const override { return new Missile(*this); }
 
-    void Print(std::ostream& os) const override {
+    void serialize(std::ostream& os) const override {
+        os << "Missile "
+        << position.x << " " << position.y << " " << position.z << " "
+        << velocity.x << " " << velocity.y << " " << velocity.z << " "
+        << explosionPower << " " << remainingFuelTime << "\n";
+    }
+
+    void print(std::ostream& os) const override {
         os << "Missile - "
            << "Pos: (" << position.x << ", " << position.y << ", " << position.z << "), "
            << "Vel: (" << velocity.x << ", " << velocity.y << ", " << velocity.z << "), "
